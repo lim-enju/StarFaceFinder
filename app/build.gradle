@@ -18,8 +18,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            //런타임에 필요하지 않거나 사용되지 않는 코드 삭제
+            //앱의 크기를 줄일 수 있음
+            minifyEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
         release {
-            minifyEnabled false
+            minifyEnabled true
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

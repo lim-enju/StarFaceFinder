@@ -15,3 +15,5 @@
 local.properties
 ./idea/*
 gradle/*
+data/src/main/res
+domain/src/main/res

@@ -1,6 +1,9 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
 }
 
 android {
@@ -8,7 +11,6 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.starFaceFinder.data"
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -18,14 +20,29 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "NaverClientId", "\"xVL2pJRmrEp4htbEYbIz\"")
+            buildConfigField("String", "NaverClientSecret", "\"yhfOTL1WqP\"")
+
+            buildConfigField("String", "SERVICE_BASE_URL", "\"https://openapi.naver.com/v1/\"")
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("String", "NaverClientId", "\"xVL2pJRmrEp4htbEYbIz\"")
+            buildConfigField("String", "NaverClientSecret", "\"yhfOTL1WqP\"")
+
+            buildConfigField("String", "SERVICE_BASE_URL", "\"https://openapi.naver.com/v1/\"")
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -42,4 +59,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    implementation 'com.google.dagger:hilt-android:2.44'
+    kapt 'com.google.dagger:hilt-android-compiler:2.44'
+}
+
+kapt {
+    correctErrorTypes = true
 }

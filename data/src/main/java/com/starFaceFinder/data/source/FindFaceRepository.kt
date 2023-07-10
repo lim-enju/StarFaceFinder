@@ -1,12 +1,19 @@
 package com.starFaceFinder.data.source
 
-import com.starFaceFinder.data.model.request.FindFaceRequest
-import com.starFaceFinder.data.source.network.FindFaceDataSource
 import com.starFaceFinder.data.source.network.IFindFaceDataSource
+import kotlinx.coroutines.flow.flow
+import java.io.File
 
 class FindFaceRepository constructor(
-    private val findFaceDataSource: FindFaceDataSource
+    private val findFaceDataSource: IFindFaceDataSource
 ){
-    suspend fun getFindFaceResult(request: FindFaceRequest)
-        = findFaceDataSource.findFace(request)
+    suspend fun getFindFaceResult(
+        name: String,
+        filename: String,
+        image: File
+    ) = flow {
+        emit(
+            findFaceDataSource.findFace(name, filename, image)
+        )
+    }
 }

@@ -1,9 +1,10 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.starFaceFinder.data.model.request.FindFaceRequest
-import com.starFaceFinder.data.source.FindFaceRepository
+import com.starFaceFinder.data.common.TAG
+import com.starFaceFinder.domain.usecase.FindFaceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,12 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val repo: FindFaceRepository
+    private val findFaceUseCase: FindFaceUseCase
 ): ViewModel() {
-
-    fun init(){
+    fun findFace(file: File){
         viewModelScope.launch (Dispatchers.IO){
-            repo.getFindFaceResult(FindFaceRequest("", "", File("")))
+            findFaceUseCase.invoke(file)
+                .collect{
+                    Log.d(TAG, "findFace: $it")
+                }
         }
     }
 }

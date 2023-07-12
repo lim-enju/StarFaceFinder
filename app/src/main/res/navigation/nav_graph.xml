@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/findFaceFragment">
+
+    <fragment
+        android:id="@+id/findFaceFragment"
+        android:name="com.example.myapplication.FindFaceFragment"
+        android:label="FindFaceFragment"
+        tools:layout="@layout/fragment_find_face">
+        <action
+            android:id="@+id/action_findFaceFragment_to_findFaceResultFragment"
+            app:destination="@id/findFaceResultFragment" />
+        <action
+            android:id="@+id/action_findFaceFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/findFaceResultFragment"
+        android:name="com.example.myapplication.FindFaceResultFragment"
+        android:label="FindFaceResultFragment"
+        tools:layout="@layout/fragment_find_face_result"/>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.myapplication.HistoryFragment"
+        android:label="HistoryFragment"
+        tools:layout="@layout/fragment_history"/>
+</navigation>

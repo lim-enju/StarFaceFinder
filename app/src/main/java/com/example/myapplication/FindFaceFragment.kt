@@ -1,19 +1,22 @@
 package com.example.myapplication
 
+import android.Manifest.permission
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentFindFaceBinding
-import android.Manifest.permission
-import android.os.Build
+
 
 class FindFaceFragment: Fragment()  {
     private var _binding: FragmentFindFaceBinding? = null
@@ -25,6 +28,11 @@ class FindFaceFragment: Fragment()  {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         }
+
+    var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()){
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +90,7 @@ class FindFaceFragment: Fragment()  {
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                startActivityForResult(takePictureIntent, 0)
+                cameraLauncher.launch(takePictureIntent)
             }
         }
     }

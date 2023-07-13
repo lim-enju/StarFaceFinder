@@ -33,6 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="to history"/>
+        <Button
+            android:id="@+id/camera_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show camera"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.databinding.FragmentMainBinding
@@ -21,17 +22,14 @@ class MainFramgnet: Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
+
     //퍼미션 확인 하는 작업을 fragment말고 다른 곳에서 하기
     //그때 무슨 패턴 있었는데.. flow로도 구현할 수 있고.. 델리게이트
     val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        }
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean -> }
 
     var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){
-
-    }
+        ActivityResultContracts.StartActivityForResult()){}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +44,13 @@ class MainFramgnet: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.startBtn.setOnClickListener {
+        binding.selectPictureBtn.setOnClickListener {
             findNavController().navigate(
-                R.id.action_main_fragment_to_history_fragment
+                R.id.action_main_fragment_to_select_picture_fragment
             )
         }
 
-        binding.history.setOnClickListener {
+        binding.historyBtn.setOnClickListener {
             findNavController().navigate(
                 R.id.action_main_fragment_to_history_fragment
             )
@@ -65,11 +63,11 @@ class MainFramgnet: Fragment() {
 
         }
 
-        binding.startBtn.setOnClickListener {
-            checkOrRequirePermission(Manifest.permission.CAMERA){
-                dispatchTakePictureIntent()
-            }
-        }
+//        binding.startBtn.setOnClickListener {
+//            checkOrRequirePermission(Manifest.permission.CAMERA){
+//                dispatchTakePictureIntent()
+//            }
+//        }
     }
 
     // TODO:: callback flow로 구현하기

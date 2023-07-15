@@ -3,30 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/findFaceFragment">
+    app:startDestination="@id/main_fragment">
 
     <fragment
-        android:id="@+id/findFaceFragment"
-        android:name="com.example.myapplication.FindFaceFragment"
-        android:label="FindFaceFragment"
-        tools:layout="@layout/fragment_find_face">
+        android:id="@+id/main_fragment"
+        android:name="com.example.myapplication.MainFramgnet"
+        android:label="HistoryFragment"
+        tools:layout="@layout/fragment_history">
         <action
-            android:id="@+id/action_findFaceFragment_to_findFaceResultFragment"
-            app:destination="@id/findFaceResultFragment" />
+            android:id="@+id/action_main_fragment_to_select_picture_fragment"
+            app:destination="@id/select_picture_fragment" />
         <action
-            android:id="@+id/action_findFaceFragment_to_historyFragment"
-            app:destination="@id/historyFragment" />
+            android:id="@+id/action_main_fragment_to_history_fragment"
+            app:destination="@id/history_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/findFaceResultFragment"
-        android:name="com.example.myapplication.FindFaceResultFragment"
-        android:label="FindFaceResultFragment"
-        tools:layout="@layout/fragment_find_face_result"/>
+        android:id="@+id/select_picture_fragment"
+        android:name="com.example.myapplication.SelectPictureFragment"
+        android:label="FindFaceFragment"
+        tools:layout="@layout/fragment_find_face">
+        <action
+            android:id="@+id/action_select_picture_fragment_to_find_face_result_fragment"
+            app:destination="@id/find_face_result_fragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/historyFragment"
+        android:id="@+id/find_face_result_fragment"
+        android:name="com.example.myapplication.FindFaceResultFragment"
+        android:label="FindFaceResultFragment"
+        tools:layout="@layout/fragment_find_face_result">
+        <action
+            android:id="@+id/action_find_face_result_fragment_to_main_fragment"
+            app:destination="@id/main_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/history_fragment"
         android:name="com.example.myapplication.HistoryFragment"
         android:label="HistoryFragment"
-        tools:layout="@layout/fragment_history"/>
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_history_fragment_to_main_fragment"
+            app:destination="@id/main_fragment" />
+    </fragment>
 </navigation>

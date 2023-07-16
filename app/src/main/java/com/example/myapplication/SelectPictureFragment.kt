@@ -1,12 +1,9 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -15,7 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.adapter.ImageAdapter
 import com.example.myapplication.databinding.FragmentFindFaceBinding
-import com.starFaceFinder.data.common.TAG
+import com.example.myapplication.utils.dpToPx
+import com.example.myapplication.view.SpacingItemDecorator
+import com.example.myapplication.view.SpacingItemDecorator.SpacingType
 import kotlinx.coroutines.launch
 
 
@@ -42,9 +41,11 @@ class SelectPictureFragment: Fragment()  {
         with(binding){
             imageAdapter = ImageAdapter()
             imagesRecycler.adapter = imageAdapter
-            imagesRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+            imagesRecycler.layoutManager = GridLayoutManager(requireContext(), 4)
+            imagesRecycler.addItemDecoration(SpacingItemDecorator(1.dpToPx(), SpacingType.TOP, SpacingType.BOTTOM, SpacingType.LEFT, SpacingType.RIGHT))
         }
     }
+
     fun initOberser(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED){

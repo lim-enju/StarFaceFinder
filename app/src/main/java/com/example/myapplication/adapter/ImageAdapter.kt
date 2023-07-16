@@ -6,31 +6,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.databinding.ViewImageBinding
 import com.starFaceFinder.data.model.ImageItem
 
 class ImageAdapter(
     var images: ArrayList<ImageItem> = arrayListOf()
 ): RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val imageView: ImageView
-        init {
-            imageView = view.findViewById(R.id.image)
+    class ViewHolder(private val binding: ViewImageBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(image: ImageItem){
+            binding.image.setImageURI(image.uri)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.view_image, parent, false)
-
-        return ViewHolder(view)
+        val binding = ViewImageBinding.inflate(LayoutInflater.from(parent.context))
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val uri = images[position]
-        holder.imageView.setImageURI(uri.uri)
+        val data = images[position]
+        holder.bind(data)
     }
-
-
 }

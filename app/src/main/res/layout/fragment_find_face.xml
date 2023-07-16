@@ -15,4 +15,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/camera_btn"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:fabCustomSize="70dp"
+        app:borderWidth="5dp"
+        app:backgroundTint="@color/white"
+        app:tint="@android:color/white"
+        android:backgroundTint="@color/red"
+        android:src="@drawable/icon_camera" />
 </androidx.constraintlayout.widget.ConstraintLayout>

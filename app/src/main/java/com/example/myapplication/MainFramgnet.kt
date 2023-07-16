@@ -28,9 +28,6 @@ class MainFramgnet: Fragment() {
     val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean -> }
 
-    var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){}
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,14 +78,6 @@ class MainFramgnet: Fragment() {
             }
             else -> {
                 requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
-
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                cameraLauncher.launch(takePictureIntent)
             }
         }
     }

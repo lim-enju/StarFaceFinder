@@ -1,9 +1,13 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -24,6 +28,10 @@ class SelectPictureFragment: Fragment()  {
     private val viewModel: SelectPictureViewModel by activityViewModels()
 
     private lateinit var imageAdapter: ImageAdapter
+
+    var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()){}
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +51,10 @@ class SelectPictureFragment: Fragment()  {
             imagesRecycler.adapter = imageAdapter
             imagesRecycler.layoutManager = GridLayoutManager(requireContext(), 4)
             imagesRecycler.addItemDecoration(SpacingItemDecorator(1.dpToPx(), SpacingType.TOP, SpacingType.BOTTOM, SpacingType.LEFT, SpacingType.RIGHT))
+
+            cameraBtn.setOnClickListener {
+                dispatchTakePictureIntent()
+            }
         }
     }
 
@@ -52,6 +64,14 @@ class SelectPictureFragment: Fragment()  {
                 viewModel.selectedPictureList.collect{ images ->
                     imageAdapter.images = images
                 }
+            }
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                cameraLauncher.launch(takePictureIntent)
             }
         }
     }

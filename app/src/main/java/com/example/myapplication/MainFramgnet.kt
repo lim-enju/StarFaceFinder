@@ -56,20 +56,13 @@ class MainFramgnet: Fragment(), IPermissionDelegation by PermissionDelegation() 
             )
         }
 
-        checkOrRequestPermission(requireActivity(), Manifest.permission.CAMERA)
 
-//        checkOrRequirePermission(
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
-//            else Manifest.permission.READ_EXTERNAL_STORAGE
-//        ){
-//
-//        }
+        checkOrRequestPermission(
+            requireActivity(),
+            Manifest.permission.CAMERA,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
+            else Manifest.permission.READ_EXTERNAL_STORAGE)
 
-//        binding.startBtn.setOnClickListener {
-//            checkOrRequirePermission(Manifest.permission.CAMERA){
-//                dispatchTakePictureIntent()
-//            }
-//        }
     }
 
 

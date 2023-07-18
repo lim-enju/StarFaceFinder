@@ -42,16 +42,13 @@ class PermissionDelegation : IPermissionDelegation {
             }
             //요청이 한개 이상 들어온 경우
             permissions.size > 1 -> {
-                permissions.forEach { permission ->
-                    if(!checkPermission(activity, permission)){
-                        multiplePermissionLauncher = activity.registerForActivityResult(
-                            ActivityResultContracts.RequestMultiplePermissions()
-                        ) { isGranted ->
-                            Log.d(TAG, "setupActivityResultLauncher: $isGranted")
-                        }
-//                            multiplePermissionLauncher.launch(permission.toTypeArray())
-                    }
+                val notGrantedPermission = permissions.filter { permission -> !checkPermission(activity, permission) }
+                multiplePermissionLauncher = activity.registerForActivityResult(
+                    ActivityResultContracts.RequestMultiplePermissions()
+                ) { isGranted ->
+                    Log.d(TAG, "setupActivityResultLauncher: $isGranted")
                 }
+                multiplePermissionLauncher.launch(notGrantedPermission.toTypedArray())
             }
             else -> {
                 //요청받은 권한이 없는 경우

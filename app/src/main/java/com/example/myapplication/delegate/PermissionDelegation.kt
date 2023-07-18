@@ -29,6 +29,7 @@ class PermissionDelegation : IPermissionDelegation {
 
     override fun checkOrRequestPermission(activity: FragmentActivity, vararg permissions: String) {
         when {
+            //요청이 한개만 들어온 경우
             permissions.size == 1 -> {
                 if(!checkPermission(activity, permissions[0])){
                     permissionLauncher = activity.registerForActivityResult(
@@ -39,6 +40,7 @@ class PermissionDelegation : IPermissionDelegation {
                     permissionLauncher.launch(permissions[0])
                 }
             }
+            //요청이 한개 이상 들어온 경우
             permissions.size > 1 -> {
                 permissions.forEach { permission ->
                     if(!checkPermission(activity, permission)){
@@ -52,7 +54,7 @@ class PermissionDelegation : IPermissionDelegation {
                 }
             }
             else -> {
-                //
+                //요청받은 권한이 없는 경우
             }
         }
     }

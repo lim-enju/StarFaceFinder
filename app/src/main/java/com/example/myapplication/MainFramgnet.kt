@@ -17,8 +17,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.databinding.FragmentMainBinding
+import com.example.myapplication.delegate.IPermissionDelegation
+import com.example.myapplication.delegate.PermissionDelegation
 
-class MainFramgnet: Fragment() {
+class MainFramgnet: Fragment(), IPermissionDelegation by PermissionDelegation() {
+
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
@@ -53,12 +56,14 @@ class MainFramgnet: Fragment() {
             )
         }
 
-        checkOrRequirePermission(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
-            else Manifest.permission.READ_EXTERNAL_STORAGE
-        ){
+        checkOrRequestPermission(requireActivity(), Manifest.permission.CAMERA)
 
-        }
+//        checkOrRequirePermission(
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
+//            else Manifest.permission.READ_EXTERNAL_STORAGE
+//        ){
+//
+//        }
 
 //        binding.startBtn.setOnClickListener {
 //            checkOrRequirePermission(Manifest.permission.CAMERA){
@@ -67,20 +72,6 @@ class MainFramgnet: Fragment() {
 //        }
     }
 
-    // TODO:: callback flow로 구현하기
-    fun checkOrRequirePermission(permission: String, onPermissionGranted: ()->Unit){
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                permission
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                onPermissionGranted()
-            }
-            else -> {
-                requestPermissionLauncher.launch(permission)
-            }
-        }
-    }
 
     //왜 null 이지..
     override fun onDestroyView() {

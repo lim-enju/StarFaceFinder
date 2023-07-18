@@ -14,22 +14,29 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.databinding.FragmentMainBinding
 import com.example.myapplication.delegate.IPermissionDelegation
 import com.example.myapplication.delegate.PermissionDelegation
+import kotlinx.coroutines.launch
 
-class MainFramgnet: Fragment(), IPermissionDelegation by PermissionDelegation() {
+class MainFramgnet: Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
+    //권한을 관리하는 delegation
+    private val permissionDelegation: IPermissionDelegation by lazy {
+        PermissionDelegation(requireActivity().activityResultRegistry)
+    }
 
-    //퍼미션 확인 하는 작업을 fragment말고 다른 곳에서 하기
-    //그때 무슨 패턴 있었는데.. flow로도 구현할 수 있고.. 델리게이트
-    val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean -> }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(permissionDelegation as LifecycleObserver)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,14 +48,8 @@ class MainFramgnet: Fragment(), IPermissionDelegation by PermissionDelegation() 
         return view
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.selectPictureBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_main_fragment_to_select_picture_fragment
-            )
-        }
 
         binding.historyBtn.setOnClickListener {
             findNavController().navigate(
@@ -56,13 +57,32 @@ class MainFramgnet: Fragment(), IPermissionDelegation by PermissionDelegation() 
             )
         }
 
+        binding.selectPictureBtn.setOnClickListener {
+            lifecycleScope.launch {
+                //갤러리 사진을 read하기 위한 권한
+                val readFilePermission =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
+                    else Manifest.permission.READ_EXTERNAL_STORAGE
 
-        checkOrRequestPermission(
-            requireActivity(),
-            Manifest.permission.CAMERA,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES
-            else Manifest.permission.READ_EXTERNAL_STORAGE)
+                //필요한 권한 요청
+                val requestResult = permissionDelegation.checkOrRequestPermission(
+                    requireActivity(),
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        readFilePermission
+                        )
+                )
 
+                //갤러리 read권한이 granted된 경우 화면이동
+                if(requestResult[readFilePermission] == true){
+                    findNavController().navigate(
+                        R.id.action_main_fragment_to_select_picture_fragment
+                    )
+                }else{
+                    //권한 재요청
+                }
+            }
+        }
     }
 
 

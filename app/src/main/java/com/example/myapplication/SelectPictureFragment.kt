@@ -16,13 +16,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.adapter.ImageAdapter
 import com.example.myapplication.databinding.FragmentFindFaceBinding
+import com.example.myapplication.delegate.IPermissionDelegation
+import com.example.myapplication.delegate.PermissionDelegation
 import com.example.myapplication.utils.dpToPx
 import com.example.myapplication.view.SpacingItemDecorator
 import com.example.myapplication.view.SpacingItemDecorator.SpacingType
 import kotlinx.coroutines.launch
 
 
-class SelectPictureFragment: Fragment()  {
+class SelectPictureFragment: Fragment() {
     private var _binding: FragmentFindFaceBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SelectPictureViewModel by activityViewModels()

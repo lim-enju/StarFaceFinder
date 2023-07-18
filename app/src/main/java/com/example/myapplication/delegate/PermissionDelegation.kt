@@ -1,25 +1,50 @@
 package com.example.myapplication.delegate
 
-import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
-import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.starFaceFinder.data.common.TAG
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.suspendCancellableCoroutine
 
-class PermissionDelegation : IPermissionDelegation {
+/**
+ * @see DefaultLifecycleObserver onCreate에서 launcher를 초기화 해주기 위해
+ * DefaultLifecycleObserver 를 상속받음
+ */
+class PermissionDelegation(
+    private val registry: ActivityResultRegistry
+) : IPermissionDelegation, DefaultLifecycleObserver {
+
+    private var requestMultiplePermissionContinuation: CancellableContinuation<Map<String, Boolean>>? = null
+    private var requestPermissionContinuation: CancellableContinuation<Boolean>? = null
 
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun onCreate(owner: LifecycleOwner) {
+        permissionLauncher = registry.register(
+            "key",
+            owner,
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            requestPermissionContinuation?.resume(isGranted, null)
+        }
+
+        multiplePermissionLauncher = registry.register(
+            "key",
+            owner,
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { grantedMap ->
+            requestMultiplePermissionContinuation?.resume(grantedMap, null)
+        }
+    }
 
     override fun checkPermission(context: Context, permission: String): Boolean =
         ContextCompat.checkSelfPermission(
@@ -27,32 +52,40 @@ class PermissionDelegation : IPermissionDelegation {
             permission
         ) == PackageManager.PERMISSION_GRANTED
 
-    override fun checkOrRequestPermission(activity: FragmentActivity, vararg permissions: String) {
-        when {
-            //요청이 한개만 들어온 경우
-            permissions.size == 1 -> {
-                if(!checkPermission(activity, permissions[0])){
-                    permissionLauncher = activity.registerForActivityResult(
-                        ActivityResultContracts.RequestPermission()
-                    ) { isGranted ->
-                        Log.d(TAG, "setupActivityResultLauncher: $isGranted")
-                    }
-                    permissionLauncher.launch(permissions[0])
-                }
-            }
-            //요청이 한개 이상 들어온 경우
-            permissions.size > 1 -> {
-                val notGrantedPermission = permissions.filter { permission -> !checkPermission(activity, permission) }
-                multiplePermissionLauncher = activity.registerForActivityResult(
-                    ActivityResultContracts.RequestMultiplePermissions()
-                ) { isGranted ->
-                    Log.d(TAG, "setupActivityResultLauncher: $isGranted")
-                }
-                multiplePermissionLauncher.launch(notGrantedPermission.toTypedArray())
-            }
-            else -> {
-                //요청받은 권한이 없는 경우
-            }
+    override suspend fun checkOrRequestPermission(
+        activity: FragmentActivity,
+        permissions: Array<String>,
+    ): Map<String, Boolean> = suspendCancellableCoroutine { continuation ->
+        requestMultiplePermissionContinuation = continuation
+
+        //허용 되지 않은 권한이 있는지 확인
+        val isNotGrantedPermission =
+            permissions.any { permission -> !checkPermission(activity, permission) }
+
+        if(isNotGrantedPermission){
+            //권한 요청
+            multiplePermissionLauncher.launch(permissions)
+        }
+
+        continuation.invokeOnCancellation {
+            requestMultiplePermissionContinuation = null
+        }
+    }
+
+    override suspend fun checkOrRequestPermission(
+        activity: FragmentActivity,
+        permissions: String
+    ): Boolean = suspendCancellableCoroutine { continuation ->
+        requestPermissionContinuation = continuation
+
+        //권한 허용 여부 확인
+        if (!checkPermission(activity, permissions)) {
+            //권한 요청
+            permissionLauncher.launch(permissions)
+        }
+
+        continuation.invokeOnCancellation {
+            requestPermissionContinuation = null
         }
     }
 }

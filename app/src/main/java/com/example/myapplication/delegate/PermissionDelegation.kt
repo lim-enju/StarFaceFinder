@@ -52,6 +52,7 @@ class PermissionDelegation(
             permission
         ) == PackageManager.PERMISSION_GRANTED
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun checkOrRequestPermission(
         activity: FragmentActivity,
         permissions: Array<String>,
@@ -65,6 +66,12 @@ class PermissionDelegation(
         if(isNotGrantedPermission){
             //권한 요청
             multiplePermissionLauncher.launch(permissions)
+        }else{
+            //권한을 모두 동의한 경우
+            requestMultiplePermissionContinuation?.resume(
+                permissions.associateWith { true },
+                null
+            )
         }
 
         continuation.invokeOnCancellation {
@@ -72,6 +79,7 @@ class PermissionDelegation(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun checkOrRequestPermission(
         activity: FragmentActivity,
         permissions: String
@@ -79,7 +87,10 @@ class PermissionDelegation(
         requestPermissionContinuation = continuation
 
         //권한 허용 여부 확인
-        if (!checkPermission(activity, permissions)) {
+        if (checkPermission(activity, permissions)) {
+            //권한을 모두 동의한 경우
+            requestPermissionContinuation?.resume(true, null)
+        }else{
             //권한 요청
             permissionLauncher.launch(permissions)
         }

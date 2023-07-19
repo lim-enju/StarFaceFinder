@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,18 @@ import com.example.myapplication.databinding.ViewImageBinding
 import com.starFaceFinder.data.model.ImageItem
 
 class ImageAdapter(
-    var images: ArrayList<ImageItem> = arrayListOf()
+    var images: ArrayList<ImageItem> = arrayListOf(),
+    val onClickImage: (Uri) -> Unit
 ): RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ViewImageBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ViewImageBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(image: ImageItem){
             Glide.with(binding.root.context)
                 .load(image.uri)
                 .into(binding.image)
+
+            binding.image.setOnClickListener{
+                onClickImage(image.uri)
+            }
         }
     }
 

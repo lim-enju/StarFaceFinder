@@ -5,12 +5,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.data.model.ImageItem
-import com.starFaceFinder.domain.usecase.FindFaceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,16 +18,17 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectPictureViewModel @Inject constructor(
-    private val findFaceUseCase: FindFaceUseCase
-): ViewModel() {
+class SelectPictureViewModel @Inject constructor(): ViewModel() {
     private val INDEX_MEDIA_ID = MediaStore.MediaColumns._ID
     private val INDEX_MEDIA_URI = MediaStore.MediaColumns.DATA
     private val INDEX_ALBUM_NAME = MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     private val INDEX_DATE_ADDED = MediaStore.MediaColumns.DATE_ADDED
 
-    private val _selectPicureList: MutableStateFlow<ArrayList<ImageItem>> = MutableStateFlow(arrayListOf())
-    val selectedPictureList: StateFlow<ArrayList<ImageItem>> = _selectPicureList.asStateFlow()
+    private val _imageList: MutableStateFlow<ArrayList<ImageItem>> = MutableStateFlow(arrayListOf())
+    val imageList: StateFlow<ArrayList<ImageItem>> = _imageList.asStateFlow()
+
+    private val _selectedImage: MutableStateFlow<Uri?> = MutableStateFlow(null)
+    val selectedImage = _selectedImage.asStateFlow()
 
     @SuppressLint("Range")
     fun fetchImageItemList(context: Context) {
@@ -50,19 +48,15 @@ class SelectPictureViewModel @Inject constructor(
         cursor?.let {
             while(cursor.moveToNext()) {
                 val mediaPath = cursor.getString(cursor.getColumnIndex(INDEX_MEDIA_URI))
-                _selectPicureList.value.add(ImageItem(Uri.fromFile(File(mediaPath))))
+                _imageList.value.add(ImageItem(Uri.fromFile(File(mediaPath))))
             }
         }
         cursor?.close()
     }
 
-//    fun getCheckedImageUriList(): MutableList<String> {
-//        val checkedImageUriList = mutableListOf<String>()
-//        imageItemList.value?.let {
-//            for(imageItem in imageItemList.value!!) {
-//                if(imageItem.isChecked) checkedImageUriList.add(imageItem.uri.toString())
-//            }
-//        }
-//        return checkedImageUriList
-//    }
+    fun setSelectedImage(uri: Uri){
+        viewModelScope.launch(Dispatchers.IO) {
+            _selectedImage.emit(uri)
+        }
+    }
 }

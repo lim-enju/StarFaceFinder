@@ -23,7 +23,14 @@ import com.example.myapplication.view.SpacingItemDecorator
 import com.example.myapplication.view.SpacingItemDecorator.SpacingType
 import kotlinx.coroutines.launch
 import android.Manifest.permission.CAMERA
+import android.app.Activity
+import android.graphics.Bitmap
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleObserver
+import com.example.myapplication.delegate.FileInputDelegation
+import com.example.myapplication.delegate.IFileInputDelegation
+import com.example.myapplication.utils.parcelable
+import kotlinx.coroutines.flow.filterNotNull
 
 
 class SelectPictureFragment: Fragment() {
@@ -34,11 +41,24 @@ class SelectPictureFragment: Fragment() {
     private lateinit var imageAdapter: ImageAdapter
 
     var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){}
+        ActivityResultContracts.StartActivityForResult()){ result ->
+        if(result.resultCode == Activity.RESULT_OK){
+            val bitmap: Bitmap? = result.data?.parcelable("data")
+            bitmap?.let { image ->
+                val file = fileInputDelegation.saveTempFile(image)
+                viewModel.setSelectedImage(file.toUri())
+            }
+        }
+    }
 
     //권한을 관리하는 delegation
     private val permissionDelegation: IPermissionDelegation by lazy {
         PermissionDelegation(requireActivity().activityResultRegistry)
+    }
+
+    //권한을 관리하는 delegation
+    private val fileInputDelegation: IFileInputDelegation by lazy {
+        FileInputDelegation(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +80,9 @@ class SelectPictureFragment: Fragment() {
 
     fun initView(){
         with(binding){
-            imageAdapter = ImageAdapter()
+            imageAdapter = ImageAdapter{ uri ->
+                viewModel.setSelectedImage(uri)
+            }
             imagesRecycler.adapter = imageAdapter
             imagesRecycler.layoutManager = GridLayoutManager(requireContext(), 4)
             imagesRecycler.addItemDecoration(SpacingItemDecorator(1.dpToPx(), SpacingType.TOP, SpacingType.BOTTOM, SpacingType.LEFT, SpacingType.RIGHT))
@@ -74,8 +96,16 @@ class SelectPictureFragment: Fragment() {
     fun initOberser(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED){
-                viewModel.selectedPictureList.collect{ images ->
-                    imageAdapter.images = images
+                launch {
+                    viewModel.imageList.collect{ images ->
+                        imageAdapter.images = images
+                    }
+                }
+
+                launch {
+                    viewModel.selectedImage.filterNotNull().collect { uri ->
+                        //image viewer로 uri 전송
+                    }
                 }
             }
         }

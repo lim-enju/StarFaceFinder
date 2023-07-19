@@ -22,6 +22,8 @@ import com.example.myapplication.utils.dpToPx
 import com.example.myapplication.view.SpacingItemDecorator
 import com.example.myapplication.view.SpacingItemDecorator.SpacingType
 import kotlinx.coroutines.launch
+import android.Manifest.permission.CAMERA
+import androidx.lifecycle.LifecycleObserver
 
 
 class SelectPictureFragment: Fragment() {
@@ -34,6 +36,15 @@ class SelectPictureFragment: Fragment() {
     var cameraLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()){}
 
+    //권한을 관리하는 delegation
+    private val permissionDelegation: IPermissionDelegation by lazy {
+        PermissionDelegation(requireActivity().activityResultRegistry)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(permissionDelegation as LifecycleObserver)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,9 +82,16 @@ class SelectPictureFragment: Fragment() {
     }
 
     private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                cameraLauncher.launch(takePictureIntent)
+        lifecycleScope.launch {
+            //카메라 권한 체크
+            val isGranted = permissionDelegation.checkOrRequestPermission(requireActivity(), CAMERA)
+            if(isGranted){
+                //카메라 실행
+                Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                    takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                        cameraLauncher.launch(takePictureIntent)
+                    }
+                }
             }
         }
     }

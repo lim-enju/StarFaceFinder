@@ -5,8 +5,10 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.data.model.ImageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,9 +56,11 @@ class SelectPictureViewModel @Inject constructor(): ViewModel() {
         cursor?.close()
     }
 
-    fun setSelectedImage(uri: Uri){
-        viewModelScope.launch(Dispatchers.IO) {
-            _selectedImage.emit(uri)
-        }
+    fun setSelectedImage(uri: Uri?){
+        Log.d(TAG, "setSelectedImage: $uri")
+        _selectedImage.value = uri
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _selectedImage.emit(uri)
+//        }
     }
 }

@@ -1,36 +1,40 @@
 package com.example.myapplication
 
+import android.Manifest.permission.CAMERA
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.adapter.ImageAdapter
 import com.example.myapplication.databinding.FragmentFindFaceBinding
+import com.example.myapplication.delegate.FileInputDelegation
+import com.example.myapplication.delegate.IFileInputDelegation
 import com.example.myapplication.delegate.IPermissionDelegation
 import com.example.myapplication.delegate.PermissionDelegation
 import com.example.myapplication.utils.dpToPx
+import com.example.myapplication.utils.parcelable
 import com.example.myapplication.view.SpacingItemDecorator
 import com.example.myapplication.view.SpacingItemDecorator.SpacingType
-import kotlinx.coroutines.launch
-import android.Manifest.permission.CAMERA
-import android.app.Activity
-import android.graphics.Bitmap
-import androidx.core.net.toUri
-import androidx.lifecycle.LifecycleObserver
-import com.example.myapplication.delegate.FileInputDelegation
-import com.example.myapplication.delegate.IFileInputDelegation
-import com.example.myapplication.utils.parcelable
+import com.starFaceFinder.data.common.TAG
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.launch
 
 
 class SelectPictureFragment: Fragment() {
@@ -97,14 +101,17 @@ class SelectPictureFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED){
                 launch {
-                    viewModel.imageList.collect{ images ->
+                    viewModel.imageList.collect { images ->
                         imageAdapter.images = images
                     }
                 }
 
                 launch {
-                    viewModel.selectedImage.filterNotNull().collect { uri ->
-                        //image viewer로 uri 전송
+                    viewModel.selectedImage.filterNotNull().distinctUntilChanged().collect { uri ->
+                        Log.d(TAG, "selectedImage: ${uri}")
+                        findNavController().navigate(
+                            R.id.action_select_picture_fragment_to_imageViewerFragment
+                        )
                     }
                 }
             }

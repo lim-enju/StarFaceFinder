@@ -26,25 +26,24 @@
         <action
             android:id="@+id/action_select_picture_fragment_to_find_face_result_fragment"
             app:destination="@id/find_face_result_fragment" />
+        <action
+            android:id="@+id/action_select_picture_fragment_to_imageViewerFragment"
+            app:destination="@id/imageViewerFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/find_face_result_fragment"
         android:name="com.example.myapplication.FindFaceResultFragment"
         android:label="FindFaceResultFragment"
-        tools:layout="@layout/fragment_find_face_result">
-        <action
-            android:id="@+id/action_find_face_result_fragment_to_main_fragment"
-            app:destination="@id/main_fragment" />
-    </fragment>
+        tools:layout="@layout/fragment_find_face_result"/>
 
     <fragment
         android:id="@+id/history_fragment"
         android:name="com.example.myapplication.HistoryFragment"
         android:label="HistoryFragment"
-        tools:layout="@layout/fragment_history">
-        <action
-            android:id="@+id/action_history_fragment_to_main_fragment"
-            app:destination="@id/main_fragment" />
-    </fragment>
+        tools:layout="@layout/fragment_history"/>
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.example.myapplication.ImageViewerFragment"
+        android:label="ImageViewerFragment" />
 </navigation>

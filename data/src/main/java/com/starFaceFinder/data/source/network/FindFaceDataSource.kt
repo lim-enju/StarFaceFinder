@@ -12,8 +12,7 @@ class FindFaceDataSource constructor(
     override suspend fun findFace(name: String, filename: String, image: File): Face =
         findFaceService.findFace(
             name = name.getBody("name")!!,
-            filename = name.getBody("filename")!!,
-            image = name.getBody("image")!!
+            filename = filename.getBody("filename")!!,
+            image = image.getBody("image")!!
         )
-
 }

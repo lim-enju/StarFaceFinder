@@ -11,9 +11,7 @@ class FindFaceRepository constructor(
         name: String,
         filename: String,
         image: File
-    ) = flow {
-        emit(
-            findFaceDataSource.findFace(name, filename, image)
-        )
+    ) = kotlin.runCatching {
+        findFaceDataSource.findFace(name, filename, image)
     }
 }

@@ -41,6 +41,12 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
 
     private fun initView(){
         binding.imageViewer.setImageURI(viewModel.selectedImage.value)
+        binding.okBtn.setOnClickListener {
+            viewModel.selectedImage.value?.let { uri ->
+                val action = ImageViewerFragmentDirections.actionImageViewerFragmentToFindFaceResultFragment(uri.path!!)
+                findNavController().navigate(action)
+            }
+        }
         binding.cancelBtn.setOnClickListener {
             viewModel.setSelectedImage(null)
             findNavController().popBackStack()

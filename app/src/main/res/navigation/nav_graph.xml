@@ -24,9 +24,6 @@
         android:label="FindFaceFragment"
         tools:layout="@layout/fragment_find_face">
         <action
-            android:id="@+id/action_select_picture_fragment_to_find_face_result_fragment"
-            app:destination="@id/find_face_result_fragment" />
-        <action
             android:id="@+id/action_select_picture_fragment_to_imageViewerFragment"
             app:destination="@id/imageViewerFragment" />
     </fragment>
@@ -35,15 +32,25 @@
         android:id="@+id/find_face_result_fragment"
         android:name="com.example.myapplication.FindFaceResultFragment"
         android:label="FindFaceResultFragment"
-        tools:layout="@layout/fragment_find_face_result"/>
+        tools:layout="@layout/fragment_find_face_result">
+        <argument
+            android:name="selectedUri"
+            app:argType="string"/>
+    </fragment>
 
     <fragment
         android:id="@+id/history_fragment"
         android:name="com.example.myapplication.HistoryFragment"
         android:label="HistoryFragment"
         tools:layout="@layout/fragment_history"/>
+
     <fragment
         android:id="@+id/imageViewerFragment"
         android:name="com.example.myapplication.ImageViewerFragment"
-        android:label="ImageViewerFragment" />
+        android:label="ImageViewerFragment"
+        tools:layout="@layout/fragment_image_viewer">
+        <action
+            android:id="@+id/action_imageViewerFragment_to_find_face_result_fragment"
+            app:destination="@id/find_face_result_fragment" />
+    </fragment>
 </navigation>

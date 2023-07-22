@@ -25,4 +25,7 @@ class FileInputDelegation(
 
         return file
     }
+
+    override fun uriToFile(uri: String): File? = File(uri).takeIf { it.exists() }
+
 }

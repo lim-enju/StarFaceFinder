@@ -19,10 +19,6 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
 
     private val viewModel: SelectPictureViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,10 +38,9 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
     private fun initView(){
         binding.imageViewer.setImageURI(viewModel.selectedImage.value)
         binding.okBtn.setOnClickListener {
-            viewModel.selectedImage.value?.let { uri ->
-                val action = ImageViewerFragmentDirections.actionImageViewerFragmentToFindFaceResultFragment(uri.path!!)
-                findNavController().navigate(action)
-            }
+            val selectedImagePath = viewModel.selectedImage.value?.path?: return@setOnClickListener
+            val action = ImageViewerFragmentDirections.actionImageViewerFragmentToFindFaceResultFragment(selectedImagePath)
+            findNavController().navigate(action)
         }
         binding.cancelBtn.setOnClickListener {
             viewModel.setSelectedImage(null)

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.delegate.FileInputDelegation
 import com.example.myapplication.delegate.IFileInputDelegation
+import com.example.myapplication.utils.KEY_IS_SELECTED_URI
 import com.example.myapplication.utils.context
 import com.starFaceFinder.data.model.Face
 import com.starFaceFinder.domain.usecase.FindFaceUseCase
@@ -35,15 +36,12 @@ class FindFaceViewModel @Inject constructor(
     }
 
     private fun fetchFindFace(){
-        //TODO:: key는 다른 파일로 이동하기
-        //중첩되는 let을 더 깔끔하게 쓸수는 없을까?
-        savedStateHandle.get<String>("selectedUri")?.let { uri ->
-            fileInputDelegation.uriToFile(uri)?.let { file ->
-                viewModelScope.launch(Dispatchers.IO){
-                    val result = findFaceUseCase.invoke(file)
-                    _findFaceResult.emit(result)
-                }
-            }
+        val uri = savedStateHandle.get<String>(KEY_IS_SELECTED_URI)?: return
+        val file = fileInputDelegation.uriToFile(uri)?: return
+
+        viewModelScope.launch(Dispatchers.IO){
+            val result = findFaceUseCase.invoke(file)
+            _findFaceResult.emit(result)
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.fragment.app.FragmentManager.OnBackStackChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentImageViewerBinding
-import com.starFaceFinder.data.common.TAG
 
 
 class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
@@ -18,6 +16,13 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
     private val binding get() = _binding!!
 
     private val viewModel: SelectPictureViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val fragmentManager = navHostFragment?.childFragmentManager
+        fragmentManager?.addOnBackStackChangedListener(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +37,6 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        childFragmentManager.addOnBackStackChangedListener(this)
     }
 
     private fun initView(){
@@ -43,18 +47,19 @@ class ImageViewerFragment: Fragment(), OnBackStackChangedListener{
             findNavController().navigate(action)
         }
         binding.cancelBtn.setOnClickListener {
-            viewModel.setSelectedImage(null)
             findNavController().popBackStack()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        childFragmentManager.removeOnBackStackChangedListener(this)
+        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val fragmentManager = navHostFragment?.childFragmentManager
+        fragmentManager?.removeOnBackStackChangedListener(this)
     }
 
+    //image viwer fragment 종료 시 setSelectedImage 비움
     override fun onBackStackChanged() {
-        Log.d(TAG, "onBackStackChanged: null")
         viewModel.setSelectedImage(null)
     }
 }

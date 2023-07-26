@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ import com.example.myapplication.utils.dpToPx
 import com.example.myapplication.utils.parcelable
 import com.example.myapplication.view.SpacingItemDecorator
 import com.example.myapplication.view.SpacingItemDecorator.SpacingType
-import com.starFaceFinder.data.common.TAG
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -60,7 +58,7 @@ class SelectPictureFragment: Fragment() {
         PermissionDelegation(requireActivity().activityResultRegistry)
     }
 
-    //권한을 관리하는 delegation
+    //파일을 관리하는 delegation
     private val fileInputDelegation: IFileInputDelegation by lazy {
         FileInputDelegation(requireContext())
     }
@@ -69,6 +67,7 @@ class SelectPictureFragment: Fragment() {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(permissionDelegation as LifecycleObserver)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,11 +77,11 @@ class SelectPictureFragment: Fragment() {
         val view = binding.root
         viewModel.fetchImageItemList(requireContext())
         initView()
-        initOberser()
+        initObserver()
         return view
     }
 
-    fun initView(){
+    private fun initView(){
         with(binding){
             imageAdapter = ImageAdapter{ uri ->
                 viewModel.setSelectedImage(uri)
@@ -97,7 +96,7 @@ class SelectPictureFragment: Fragment() {
         }
     }
 
-    fun initOberser(){
+    private fun initObserver(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED){
                 launch {
@@ -108,7 +107,6 @@ class SelectPictureFragment: Fragment() {
 
                 launch {
                     viewModel.selectedImage.filterNotNull().distinctUntilChanged().collect { uri ->
-                        Log.d(TAG, "selectedImage: ${uri}")
                         findNavController().navigate(
                             R.id.action_select_picture_fragment_to_imageViewerFragment
                         )

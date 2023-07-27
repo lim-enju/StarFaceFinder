@@ -47,6 +47,7 @@ class SelectPictureFragment: Fragment() {
         if(result.resultCode == Activity.RESULT_OK){
             val bitmap: Bitmap? = result.data?.parcelable("data")
             bitmap?.let { image ->
+                //temp file로 저장 후 uri 변환
                 val file = fileInputDelegation.saveTempFile(image)
                 viewModel.setSelectedImage(file.toUri())
             }
@@ -106,11 +107,14 @@ class SelectPictureFragment: Fragment() {
                 }
 
                 launch {
-                    viewModel.selectedImage.filterNotNull().distinctUntilChanged().collect { uri ->
-                        findNavController().navigate(
-                            R.id.action_select_picture_fragment_to_imageViewerFragment
-                        )
-                    }
+                    viewModel.selectedImage
+                        .filterNotNull()
+                        .distinctUntilChanged()
+                        .collect {
+                            findNavController().navigate(
+                                R.id.action_select_picture_fragment_to_imageViewerFragment
+                            )
+                        }
                 }
             }
         }

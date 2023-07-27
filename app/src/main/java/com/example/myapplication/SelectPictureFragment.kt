@@ -99,7 +99,12 @@ class SelectPictureFragment: Fragment() {
 
     private fun initObserver(){
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED){
+            /*
+             Lifecycle.State.CREATE로 할 경우 ImageViewerFragment에서 back key를 누르면 SelectPictureFragment의 selectedImage flow가 collect 된 후
+             ImaveViewerFragment 가 Destory 된다..
+             Lifecycle.State.RESUMED 으로 작성하면 Destory 가 된 후 SelectPictureFragment의 selectedImage 가 collect 된다..
+            */
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
                 launch {
                     viewModel.imageList.collect { images ->
                         imageAdapter.images = images

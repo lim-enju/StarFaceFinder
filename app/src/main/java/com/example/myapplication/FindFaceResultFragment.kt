@@ -58,7 +58,6 @@ class FindFaceResultFragment: Fragment() {
                         .filterNotNull()
                         .collect { result ->
                             val faces = result.getOrNull()?.faces
-                            Log.d(TAG, "initObserver: $faces")
                             if(result.isFailure || faces == null){
                                 return@collect
                             }

@@ -1,17 +1,13 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager.OnBackStackChangedListener
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.databinding.FragmentImageViewerBinding
-import com.starFaceFinder.data.common.TAG
 
 
 class ImageViewerFragment: Fragment(){
@@ -43,23 +39,13 @@ class ImageViewerFragment: Fragment(){
             findNavController().navigate(action)
         }
         binding.cancelBtn.setOnClickListener {
-            onPopBackstack()
+            findNavController().popBackStack()
         }
-
-//        requireActivity().onBackPressedDispatcher.addCallback {
-//            onPopBackstack()
-//            Log.d(TAG, "initView: onBackPressedDispatcher")
-//        }
-//        requireActivity().onBackPressedDispatcher.remove
-    }
-
-    private fun onPopBackstack(){
-        viewModel.setSelectedImage(null)
-        findNavController().popBackStack()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        viewModel.setSelectedImage(null)
         _binding = null
+        super.onDestroy()
     }
 }

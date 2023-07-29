@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.CelebritysAdapter
 import com.example.myapplication.databinding.FragmentFindFaceResultBinding
-import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -58,11 +56,15 @@ class FindFaceResultFragment: Fragment() {
                         .filterNotNull()
                         .collect { result ->
                             val faces = result.getOrNull()?.faces
+
+                            //결과를 받아오지 못한 경우
                             if(result.isFailure || faces == null){
                                 return@collect
                             }
+
+                            celebritysAdapter.isSearchingSuccess = true
                             celebritysAdapter.celebrities = faces
-                            celebritysAdapter.notifyItemRangeChanged(0, faces.size)
+                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
                     }
                 }
                 launch {

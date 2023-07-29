@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
+
+    <string name="nobody_celebrity">유사한 유명인이 없습니다.</string>
 </resources>

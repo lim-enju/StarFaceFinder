@@ -57,7 +57,6 @@ class SelectPictureViewModel @Inject constructor(): ViewModel() {
     }
 
     fun setSelectedImage(uri: Uri?){
-        Log.d(TAG, "setSelectedImage: $uri")
         viewModelScope.launch(Dispatchers.IO) {
             _selectedImage.emit(uri)
         }

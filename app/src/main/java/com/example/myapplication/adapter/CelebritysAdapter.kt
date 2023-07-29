@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.starFaceFinder.data.model.Celebrity
-import com.starFaceFinder.data.model.Faces
+import com.starFaceFinder.data.model.Face
 
 class CelebritysAdapter(
-    var celebrities: ArrayList<Faces> = arrayListOf()
+    var celebrities: ArrayList<Face> = arrayListOf()
 ): RecyclerView.Adapter<CelebritysAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ViewCelebrityBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(celebrity: Celebrity?){

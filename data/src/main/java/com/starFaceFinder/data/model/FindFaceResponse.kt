@@ -2,12 +2,12 @@ package com.starFaceFinder.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Face(
+data class FindFaceResponse(
     @SerializedName("info")
     var info: Info? = null,
 
     @SerializedName("faces")
-    var faces: ArrayList<Faces> = arrayListOf()
+    var faces: ArrayList<Face> = arrayListOf()
 )
 
 data class Size(
@@ -34,7 +34,7 @@ data class Celebrity(
     var confidence: Double? = null
 )
 
-data class Faces(
+data class Face(
     @SerializedName("celebrity")
     var celebrity: Celebrity? = Celebrity()
 )

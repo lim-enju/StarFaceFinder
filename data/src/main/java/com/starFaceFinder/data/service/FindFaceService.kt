@@ -1,7 +1,7 @@
 package com.starFaceFinder.data.service
 
 import com.starFaceFinder.data.BuildConfig
-import com.starFaceFinder.data.model.Face
+import com.starFaceFinder.data.model.FindFaceResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -18,5 +18,5 @@ interface FindFaceService {
         @Part image: MultipartBody.Part,
         @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
         @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret
-    ): Face
+    ): FindFaceResponse
 }

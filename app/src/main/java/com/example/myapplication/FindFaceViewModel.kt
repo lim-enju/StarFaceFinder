@@ -8,18 +8,12 @@ import com.example.myapplication.delegate.FileInputDelegation
 import com.example.myapplication.delegate.IFileInputDelegation
 import com.example.myapplication.utils.KEY_IS_SELECTED_URI
 import com.example.myapplication.utils.context
-import com.starFaceFinder.data.model.Face
 import com.starFaceFinder.domain.usecase.FindFaceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 import javax.inject.Inject
 

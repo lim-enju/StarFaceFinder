@@ -1,4 +1,4 @@
-package com.starFaceFinder.data.model
+package com.starFaceFinder.data.model.response
 
 import com.google.gson.annotations.SerializedName
 

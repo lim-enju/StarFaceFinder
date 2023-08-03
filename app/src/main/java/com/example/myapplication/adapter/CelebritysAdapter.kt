@@ -9,8 +9,8 @@ import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.SEARCH
 import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.example.myapplication.databinding.ViewNobodyCelebrityBinding
 import com.example.myapplication.databinding.ViewSearchingCelebrityBinding
-import com.starFaceFinder.data.model.Celebrity
-import com.starFaceFinder.data.model.Face
+import com.starFaceFinder.data.model.response.Celebrity
+import com.starFaceFinder.data.model.response.Face
 
 class CelebritysAdapter(
     var celebrities: ArrayList<Face> = arrayListOf(),

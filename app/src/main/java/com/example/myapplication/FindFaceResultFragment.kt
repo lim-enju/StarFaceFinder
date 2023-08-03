@@ -55,23 +55,19 @@ class FindFaceResultFragment: Fragment() {
                     viewModel.findFaceResult
                         .filterNotNull()
                         .collect { result ->
-                            val faces = result.getOrNull()?.faces
-
-                            //결과를 받아오지 못한 경우
-                            if(result.isFailure || faces == null){
-                                return@collect
-                            }
-
-                            celebritysAdapter.isSearchingSuccess = true
-                            celebritysAdapter.celebrities = faces
-                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
+//                            //TODO:: 에러처리
+//                            val faces = result.getOrNull()?.faces?: arrayListOf()
+//
+//                            celebritysAdapter.isSearchingSuccess = true
+//                            celebritysAdapter.celebrities = faces
+//                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
                     }
                 }
                 launch {
                     viewModel.imageFile
                         .filterNotNull()
                         .collect { imageFile ->
-                            binding.resultImg.setImageURI(imageFile.toUri())
+//                            binding.resultImg.setImageURI(imageFile.toUri())
                         }
                 }
             }

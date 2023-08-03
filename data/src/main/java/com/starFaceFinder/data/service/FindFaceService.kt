@@ -1,12 +1,15 @@
 package com.starFaceFinder.data.service
 
 import com.starFaceFinder.data.BuildConfig
-import com.starFaceFinder.data.model.FindFaceResponse
+import com.starFaceFinder.data.model.response.FindFaceResponse
+import com.starFaceFinder.data.model.response.SearchedImageResponse
 import okhttp3.MultipartBody
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 
 interface FindFaceService {
@@ -19,4 +22,11 @@ interface FindFaceService {
         @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
         @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret
     ): FindFaceResponse
+
+    @GET("search/image")
+    suspend fun searchImage(
+        @Query("query") query: String,
+        @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
+        @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret
+    ): SearchedImageResponse
 }

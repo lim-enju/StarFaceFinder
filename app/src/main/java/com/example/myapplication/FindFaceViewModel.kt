@@ -8,7 +8,7 @@ import com.example.myapplication.delegate.FileInputDelegation
 import com.example.myapplication.delegate.IFileInputDelegation
 import com.example.myapplication.utils.KEY_IS_SELECTED_URI
 import com.example.myapplication.utils.context
-import com.starFaceFinder.domain.usecase.FindFaceUseCase
+import com.starFaceFinder.domain.usecase.SearchSimilarFaceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FindFaceViewModel @Inject constructor(
     application: Application,
-    private val findFaceUseCase: FindFaceUseCase,
+    private val searchSimilarFaceUseCase: SearchSimilarFaceUseCase,
     private val savedStateHandle: SavedStateHandle,
 ): AndroidViewModel(application) {
 
@@ -33,6 +33,6 @@ class FindFaceViewModel @Inject constructor(
     }
 
     val findFaceResult = imageFile.map { file ->
-        findFaceUseCase.invoke(file)
+        searchSimilarFaceUseCase.invoke(file)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 }

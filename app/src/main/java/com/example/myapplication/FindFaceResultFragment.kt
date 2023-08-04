@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FindFaceResultFragment: Fragment() {
+class FindFaceResultFragment : Fragment() {
     private var _binding: FragmentFindFaceResultBinding? = null
     private val binding get() = _binding!!
 
@@ -40,28 +40,34 @@ class FindFaceResultFragment: Fragment() {
         initObserver()
     }
 
-    private fun initView(){
-        with(binding.celebrityList){
+    private fun initView() {
+        with(binding.celebrityList) {
             celebritysAdapter = CelebritysAdapter()
             layoutManager = LinearLayoutManager(requireContext())
             adapter = celebritysAdapter
         }
     }
 
-    private fun initObserver(){
+    private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED){
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     viewModel.findFaceResult
                         .filterNotNull()
                         .collect { result ->
-                            //TODO:: 에러처리
-                            val faces = result.getOrNull()?: arrayListOf()
+                            if (result.isFailure) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    R.string.network_error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
 
-                            celebritysAdapter.isSearchingSuccess = true
+                            val faces = result.getOrNull() ?: arrayListOf()
+                            celebritysAdapter.isSearchingComplete = true
                             celebritysAdapter.celebrities = faces
                             celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
-                    }
+                        }
                 }
                 launch {
                     viewModel.imageFile

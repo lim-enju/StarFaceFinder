@@ -2,4 +2,6 @@
     <string name="app_name">My Application</string>
 
     <string name="nobody_celebrity">유사한 유명인이 없습니다.</string>
+
+    <string name="network_error">네트워크 연결 상태를 확인해주세요.</string>
 </resources>

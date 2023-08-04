@@ -6,7 +6,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.util.Locale
 
-fun Any.getBody(key: String): MultipartBody.Part?
+fun Any.getBody(key: String): MultipartBody.Part
     = when{
         //이미지 파일인 경우
         this is File && isImageFile() -> {
@@ -16,8 +16,6 @@ fun Any.getBody(key: String): MultipartBody.Part?
                 body = asRequestBody("image/*".toMediaType())
             )
         }
-        //이미지 외에 다른 파일인 경우
-        this is File -> null
         else -> MultipartBody.Part.createFormData(key, toString())
     }
 

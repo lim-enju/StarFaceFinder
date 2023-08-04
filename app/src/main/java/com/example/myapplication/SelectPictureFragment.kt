@@ -22,8 +22,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.adapter.ImageAdapter
 import com.example.myapplication.databinding.FragmentFindFaceBinding
-import com.example.myapplication.delegate.FileInputDelegation
-import com.example.myapplication.delegate.IFileInputDelegation
+import com.example.myapplication.delegate.FileDelegation
+import com.example.myapplication.delegate.IFileDelegation
 import com.example.myapplication.delegate.IPermissionDelegation
 import com.example.myapplication.delegate.PermissionDelegation
 import com.example.myapplication.utils.dpToPx
@@ -48,7 +48,7 @@ class SelectPictureFragment: Fragment() {
             val bitmap: Bitmap? = result.data?.parcelable("data")
             bitmap?.let { image ->
                 //temp file로 저장 후 uri 변환
-                val file = fileInputDelegation.saveTempFile(image)
+                val file = fileDelegation.saveTempFile(image)
                 viewModel.setSelectedImage(file.toUri())
             }
         }
@@ -60,8 +60,8 @@ class SelectPictureFragment: Fragment() {
     }
 
     //파일을 관리하는 delegation
-    private val fileInputDelegation: IFileInputDelegation by lazy {
-        FileInputDelegation(requireContext())
+    private val fileDelegation: IFileDelegation by lazy {
+        FileDelegation(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

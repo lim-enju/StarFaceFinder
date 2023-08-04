@@ -8,12 +8,6 @@ import android.view.ViewOutlineProvider
 import androidx.databinding.BindingAdapter
 import com.example.myapplication.MainApplication
 
-fun Int.dpToPx (): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(),
-    MainApplication.appContext.resources.displayMetrics).toInt()
-
-fun Float.dpToPx (): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this,
-    MainApplication.appContext.resources.displayMetrics).toInt()
-
 @BindingAdapter("app:radius")
 fun View.setRadius(radius: Float) {
     outlineProvider = object : ViewOutlineProvider() {

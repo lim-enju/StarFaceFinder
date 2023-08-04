@@ -11,14 +11,11 @@ import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.example.myapplication.databinding.ViewNobodyCelebrityBinding
 import com.example.myapplication.databinding.ViewSearchingCelebrityBinding
 import com.starFaceFinder.data.model.SimilarFaces
-import com.starFaceFinder.data.model.response.Celebrity
-import com.starFaceFinder.data.model.response.Face
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 class CelebritysAdapter(
     var celebrities: List<SimilarFaces> = listOf(),
-    var isSearchingSuccess: Boolean = false
+    var isSearchingComplete: Boolean = false
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class ViewHolderType(val type: Int){
@@ -80,7 +77,7 @@ class CelebritysAdapter(
     override fun getItemViewType(position: Int): Int =
         when{
             //아직 검색중인 경우
-            !isSearchingSuccess -> SEARCHING.type
+            !isSearchingComplete -> SEARCHING.type
             //유명인을 찾은 경우
             celebrities.isNotEmpty() -> CELEBRITY.type
             //유명인이 없는 경우

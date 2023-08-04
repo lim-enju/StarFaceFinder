@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.delegate.FileInputDelegation
-import com.example.myapplication.delegate.IFileInputDelegation
+import com.example.myapplication.delegate.FileDelegation
+import com.example.myapplication.delegate.IFileDelegation
 import com.example.myapplication.utils.KEY_IS_SELECTED_URI
 import com.example.myapplication.utils.context
 import com.starFaceFinder.domain.usecase.SearchSimilarFaceUseCase
@@ -24,15 +24,17 @@ class FindFaceViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ): AndroidViewModel(application) {
 
-    private val fileInputDelegation: IFileInputDelegation by lazy { FileInputDelegation(context) }
+    private val fileDelegation: IFileDelegation by lazy { FileDelegation(context) }
 
     val imageFile = flow {
         val imageUri = savedStateHandle.get<String>(KEY_IS_SELECTED_URI)?: throw FileNotFoundException()
-        val file = fileInputDelegation.uriToFile(imageUri)?: throw FileNotFoundException()
+        val file = fileDelegation.uriToFile(imageUri)?: throw FileNotFoundException()
         emit(file)
     }
 
     val findFaceResult = imageFile.map { file ->
-        searchSimilarFaceUseCase.invoke(file)
+        fileDelegation.resizeImage(file)?.let { resized ->
+            searchSimilarFaceUseCase.invoke(resized)
+        }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 }

@@ -55,12 +55,12 @@ class FindFaceResultFragment: Fragment() {
                     viewModel.findFaceResult
                         .filterNotNull()
                         .collect { result ->
-//                            //TODO:: 에러처리
-//                            val faces = result.getOrNull()?.faces?: arrayListOf()
-//
-//                            celebritysAdapter.isSearchingSuccess = true
-//                            celebritysAdapter.celebrities = faces
-//                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
+                            //TODO:: 에러처리
+                            val faces = result.getOrNull()?: arrayListOf()
+
+                            celebritysAdapter.isSearchingSuccess = true
+                            celebritysAdapter.celebrities = faces
+                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
                     }
                 }
                 launch {

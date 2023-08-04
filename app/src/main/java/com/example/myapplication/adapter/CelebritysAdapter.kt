@@ -3,17 +3,21 @@ package com.example.myapplication.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.CELEBRITY
 import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.NOBODY
 import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.SEARCHING
 import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.example.myapplication.databinding.ViewNobodyCelebrityBinding
 import com.example.myapplication.databinding.ViewSearchingCelebrityBinding
+import com.starFaceFinder.data.model.SimilarFaces
 import com.starFaceFinder.data.model.response.Celebrity
 import com.starFaceFinder.data.model.response.Face
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 class CelebritysAdapter(
-    var celebrities: ArrayList<Face> = arrayListOf(),
+    var celebrities: List<SimilarFaces> = listOf(),
     var isSearchingSuccess: Boolean = false
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -24,9 +28,20 @@ class CelebritysAdapter(
     }
 
     inner class CelebrityViewHolder(private val binding: ViewCelebrityBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(celebrity: Celebrity?){
+        fun bind(celebrity: SimilarFaces?){
+            val confidence = (celebrity?.confidence ?: 0.0) * 100
+            val roundConfidence = round(confidence*100) / 100
+
+            binding.confidenceTxt.text = "일치율: $roundConfidence %"
+            binding.confidenceProgressBar.progress = roundConfidence.toInt()
             binding.nameTxt.text = celebrity?.value
-            binding.confidenceTxt.text = (celebrity?.confidence?:0).toString()
+
+            Glide
+                .with(binding.root.rootView.context)
+                .load(celebrity?.link)
+                .dontAnimate()
+                .override(300,400)
+                .into(binding.similarImg)
         }
     }
 
@@ -57,8 +72,7 @@ class CelebritysAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder){
             is CelebrityViewHolder -> {
-                val data = celebrities[position]
-                holder.bind(data.celebrity)
+                holder.bind(celebrities[position])
             }
         }
     }

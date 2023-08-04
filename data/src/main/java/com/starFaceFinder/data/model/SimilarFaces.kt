@@ -16,8 +16,8 @@ data class SimilarFaces(
     var thumbnail: String? = null,
 
     @SerializedName("sizeheight")
-    var sizeheight: String? = null,
+    var sizeheight: Float,
 
     @SerializedName("sizewidth")
-    var sizewidth: String? = null
+    var sizewidth: Float
 )

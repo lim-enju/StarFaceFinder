@@ -16,13 +16,14 @@ class SearchSimilarFaceUseCase @Inject constructor(
         val searchedFaces = searchedFacesResult.getOrElse { return Result.failure(it) }
 
         val similarFaces = searchedFaces.faces.map { face ->
-            val name = face.celebrity?.value?: return@map null
-            val confidence = face.celebrity?.confidence?: return@map null
+            val name = face.celebrity?.value ?: return@map null
+            val confidence = face.celebrity?.confidence ?: return@map null
 
             //연예인 사진 검색
             val searchedImagesResult = searchRepository.searchImage(name)
             val searchedImages = searchedImagesResult.getOrElse { return Result.failure(it) }
-            val firstImage = searchedImages.items.firstOrNull()?: return@map null
+            val firstImage =
+                searchedImages.items.firstOrNull { it.sizeheight > it.sizewidth } ?: return@map null
 
             SimilarFaces(
                 name,

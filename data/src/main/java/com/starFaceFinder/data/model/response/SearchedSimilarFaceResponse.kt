@@ -2,7 +2,7 @@ package com.starFaceFinder.data.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class FindFaceResponse(
+data class SearchedSimilarFaceResponse(
     @SerializedName("info")
     var info: Info? = null,
 

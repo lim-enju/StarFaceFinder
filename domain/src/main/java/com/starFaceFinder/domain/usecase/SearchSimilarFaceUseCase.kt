@@ -12,7 +12,7 @@ class SearchSimilarFaceUseCase @Inject constructor(
         image: File
     ): Result<List<SimilarFaces>> {
         //유사한 유명인 검색
-        val searchedFacesResult = searchRepository.searchFaceResult(image.name, image.name, image)
+        val searchedFacesResult = searchRepository.searchSimilarFace(image.name, image.name, image)
         val searchedFaces = searchedFacesResult.getOrElse { return Result.failure(it) }
 
         val similarFaces = searchedFaces.faces.map { face ->

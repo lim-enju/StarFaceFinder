@@ -4,27 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class SearchedSimilarFaceResponse(
     @SerializedName("info")
-    var info: Info? = null,
+    var info: ImageInfo? = null,
 
     @SerializedName("faces")
     var faces: ArrayList<Face> = arrayListOf()
 )
 
-data class Size(
-    @SerializedName("width")
-    var width: Int? = null,
-
-    @SerializedName("height")
-    var height: Int? = null
-)
-
-data class Info(
-    @SerializedName("size")
-    var size: Size? = Size(),
-
-    @SerializedName("faceCount")
-    var faceCount: Int? = null
-)
 
 data class Celebrity(
     @SerializedName("value")

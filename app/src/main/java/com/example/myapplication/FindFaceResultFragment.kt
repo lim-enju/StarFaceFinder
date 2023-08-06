@@ -52,7 +52,7 @@ class FindFaceResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.findFaceResult
+                    viewModel.searchedSimilarFace
                         .filterNotNull()
                         .collect { result ->
                             if (result.isFailure) {
@@ -70,10 +70,9 @@ class FindFaceResultFragment : Fragment() {
                         }
                 }
                 launch {
-                    viewModel.imageFile
+                    viewModel.searchedFaceInfo
                         .filterNotNull()
                         .collect { imageFile ->
-//                            binding.resultImg.setImageURI(imageFile.toUri())
                         }
                 }
             }

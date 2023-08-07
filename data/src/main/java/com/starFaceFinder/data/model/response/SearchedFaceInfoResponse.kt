@@ -1,6 +1,7 @@
 package com.starFaceFinder.data.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.starFaceFinder.data.model.Position
 
 data class SearchedFaceInfoResponse(
     @SerializedName("info") var info: ImageInfo? = ImageInfo(),
@@ -34,9 +35,17 @@ data class Pose(
     @SerializedName("confidence") var confidence: Double? = null
 )
 
+data class Landmark(
+    @SerializedName("leftEye") var leftEye: Position? = null,
+    @SerializedName("rightEye") var rightEye: Position? = null,
+    @SerializedName("nose") var nose: Position? = null,
+    @SerializedName("leftMouth") var leftMouth: Position? = null,
+    @SerializedName("rightMouth") var rightMouth: Position? = null
+)
+
 data class Faces(
     @SerializedName("roi") var roi: Roi? = Roi(),
-    @SerializedName("landmark") var landmark: String? = null,
+    @SerializedName("landmark") var landmark: Landmark? = null,
     @SerializedName("gender") var gender: Gender? = Gender(),
     @SerializedName("age") var age: Age? = Age(),
     @SerializedName("emotion") var emotion: Emotion? = Emotion(),

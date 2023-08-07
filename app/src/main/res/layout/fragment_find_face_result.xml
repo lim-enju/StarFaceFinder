@@ -1,16 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/celebrity_list"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:radius="@{@dimen/space1}"
+                android:background="@color/background"
+                android:padding="@dimen/space1"
+                android:layout_margin="@dimen/space1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/selected_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:padding="@dimen/space1"/>
+
+                <TextView
+                    android:id="@+id/age_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="4dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space1"
+                    android:orientation="vertical">
+
+                    <com.example.myapplication.view.GenderView
+                        android:id="@+id/child_gender_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:gender="child"/>
+
+                    <com.example.myapplication.view.GenderView
+                        android:id="@+id/male_gender_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:gender="male"/>
+
+                    <com.example.myapplication.view.GenderView
+                        android:id="@+id/female_gender_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:gender="female"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="닮은 연예인"
+                android:padding="@dimen/space1"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/celebrity_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

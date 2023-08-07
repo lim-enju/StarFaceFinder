@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GenderView">
+        <attr name="gender" format="enum">
+            <enum name="male" value="0"/>
+            <enum name="female" value="1"/>
+            <enum name="child" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>

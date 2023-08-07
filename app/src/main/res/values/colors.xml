@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF6063</color>
+
+    <color name="background">#E9F1F6</color>
+    <color name="male">#2196F3</color>
+    <color name="female">#E16F71</color>
+    <color name="child">#FFEB3B</color>
 </resources>

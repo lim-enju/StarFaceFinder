@@ -35,6 +35,7 @@ class FindFaceViewModel @Inject constructor(
         val file = fileDelegation.uriToFile(imageUri) ?: throw FileNotFoundException()
         emit(file)
     }
+
     //TODO:: resize 버그 수정하기
     val searchedSimilarFace =
         imageFile
@@ -42,11 +43,11 @@ class FindFaceViewModel @Inject constructor(
 //        fileDelegation.resizeImage(file)?.let { resized ->
 //            searchSimilarFaceUseCase.invoke(resized)
 //        }
-        searchSimilarFaceUseCase.invoke(file)
-    }
+                searchSimilarFaceUseCase.invoke(file)
+            }
 
     val searchedFaceInfo = imageFile
         .map { file ->
-        searchFaceInfoUseCase.invoke(file)
+            searchFaceInfoUseCase.invoke(file)
         }
 }

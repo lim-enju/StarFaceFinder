@@ -13,4 +13,7 @@
     <color name="male">#2196F3</color>
     <color name="female">#E16F71</color>
     <color name="child">#FFEB3B</color>
+    <color name="shimmer">#B3B3B3</color>
+    <color name="shimmer_background">#CCCACA</color>
+    <color name="shimmer_stroke">#BAB9B9</color>
 </resources>

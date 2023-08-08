@@ -64,9 +64,17 @@ class FindFaceResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
+                    viewModel.imageFile.collect {
+                        showCelebritiesLayoutTravelData(true)
+                        showFaceInfoLayoutTravelData(true)
+                    }
+                }
+                launch {
                     viewModel.searchedSimilarFace
                         .filterNotNull()
                         .collect { result ->
+                            showCelebritiesLayoutTravelData(false)
+
                             if (result.isFailure) {
                                 Toast.makeText(
                                     requireContext(),
@@ -84,7 +92,9 @@ class FindFaceResultFragment : Fragment() {
                 launch {
                     viewModel.searchedFaceInfo
                         .combine(viewModel.imageFile) { faceInfoResult, imageFile ->
-                            with(binding){
+                            with(binding.layoutFaceInfo){
+                                showFaceInfoLayoutTravelData(false)
+
                                 val faceInfo = faceInfoResult.getOrNull()
 
                                 if(faceInfoResult.isFailure || faceInfo == null) {
@@ -168,6 +178,30 @@ class FindFaceResultFragment : Fragment() {
         )
 
         imageView.setImageBitmap(bitmap)
+    }
+
+    private fun showCelebritiesLayoutTravelData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.shimmerCelebritiesLayout.startShimmer()
+            binding.shimmerCelebritiesLayout.visibility = View.VISIBLE
+            binding.celebrityList.visibility = View.GONE
+        } else {
+            binding.shimmerCelebritiesLayout.stopShimmer()
+            binding.shimmerCelebritiesLayout.visibility = View.GONE
+            binding.celebrityList.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showFaceInfoLayoutTravelData(isLoading: Boolean) {
+        if (isLoading) {
+            binding.shimmerFaceInfoLayout.startShimmer()
+            binding.shimmerFaceInfoLayout.visibility = View.VISIBLE
+            binding.layoutFaceInfo.root.visibility = View.GONE
+        } else {
+            binding.shimmerFaceInfoLayout.stopShimmer()
+            binding.shimmerFaceInfoLayout.visibility = View.GONE
+            binding.layoutFaceInfo.root.visibility = View.VISIBLE
+        }
     }
 
     //왜 null 이지..

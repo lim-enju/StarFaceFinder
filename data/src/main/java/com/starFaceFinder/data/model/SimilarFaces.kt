@@ -2,12 +2,24 @@ package com.starFaceFinder.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity
+@Entity(
+    foreignKeys = arrayOf(
+        ForeignKey(
+            entity = FaceInfo::class,
+            parentColumns = arrayOf("fid"),
+            childColumns = arrayOf("fid"),
+            onDelete = ForeignKey.CASCADE
+        ))
+)
 data class SimilarFaces(
     @PrimaryKey val id: Int,
+
+    @ColumnInfo("fid")
+    val fid:Int,
 
     @SerializedName("value")
     @ColumnInfo(name = "value")

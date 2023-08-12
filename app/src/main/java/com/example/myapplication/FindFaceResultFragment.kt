@@ -95,24 +95,13 @@ class FindFaceResultFragment : Fragment() {
                             with(binding.layoutFaceInfo){
                                 showFaceInfoLayoutTravelData(false)
 
-                                val faceInfo = faceInfoResult.getOrNull()
+                                val face = faceInfoResult.getOrNull()
 
-                                if(faceInfoResult.isFailure || faceInfo == null) {
+                                if(faceInfoResult.isFailure || face == null) {
                                     //TODO:: 에러처리
                                     return@combine
                                 }
 
-                                if(faceInfo.isEmpty()){
-                                    //TODO:: 에러처리
-                                    return@combine
-                                }
-
-                                if(faceInfo.size != 1){
-                                    //TODO:: 에러처리
-                                    return@combine
-                                }
-
-                                val face = faceInfo.first()
 
                                 Glide
                                     .with(requireContext())
@@ -121,9 +110,9 @@ class FindFaceResultFragment : Fragment() {
                                     .into(selectedImg)
 
                                 //성별 표시
-                                var confidence = face.gender?.confidence?.toFloat()?.times(100)?.toInt()?:0
+                                var confidence = face.genderConfidence?:0
                                 var genderText: String? = null
-                                when(face.gender?.value) {
+                                when(face.gender) {
                                     "male" -> {
                                         genderText = "남성"
                                         childGenderView.isVisible = false
@@ -147,8 +136,8 @@ class FindFaceResultFragment : Fragment() {
                                 }
 
                                 //나이 표시
-                                confidence = face.age?.confidence?.toFloat()?.times(100)?.toInt()?:0
-                                ageTxt.text = "${face.age?.value}세 $genderText ${confidence}%"
+                                confidence = face.ageConfidence?:0
+                                ageTxt.text = "${face.age}세 $genderText ${confidence}%"
                             }
                         }.collect()
                 }

@@ -1,12 +1,23 @@
 package com.starFaceFinder.data.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.Position
 
 data class SearchedFaceInfoResponse(
     @SerializedName("info") var info: ImageInfo? = ImageInfo(),
     @SerializedName("faces") var faces: ArrayList<Faces> = arrayListOf()
-)
+){
+    fun toFaceInfo(): FaceInfo? {
+        val face = faces.firstOrNull()?: return null
+        return FaceInfo(
+            face.gender?.value,
+            face.gender?.confidence?.toFloat()?.times(100)?.toInt(),
+            face.age?.value,
+            face.age?.confidence?.toFloat()?.times(100)?.toInt()
+        )
+    }
+}
 
 data class Roi(
     @SerializedName("x") var x: Int? = null,

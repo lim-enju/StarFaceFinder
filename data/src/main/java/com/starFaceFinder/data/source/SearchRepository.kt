@@ -26,5 +26,6 @@ class SearchRepository constructor(
         image: File
     ) = kotlin.runCatching {
         searchDataSource.searchFaceInfo(name, filename, image)
+            .toFaceInfo()
     }
 }

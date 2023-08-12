@@ -7,19 +7,18 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = FaceInfo::class,
-            parentColumns = arrayOf("fid"),
-            childColumns = arrayOf("fid"),
-            onDelete = ForeignKey.CASCADE
-        ))
+    foreignKeys = [ForeignKey(
+        entity = FaceInfo::class,
+        parentColumns = arrayOf("fid"),
+        childColumns = arrayOf("fid"),
+        onDelete = ForeignKey.CASCADE
+    )]
 )
 data class SimilarFaces(
     @PrimaryKey val id: Int,
 
     @ColumnInfo("fid")
-    val fid:Int,
+    val fid: Int,
 
     @SerializedName("value")
     @ColumnInfo(name = "value")

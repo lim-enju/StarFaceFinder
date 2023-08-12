@@ -27,6 +27,7 @@ class SearchSimilarFaceUseCase @Inject constructor(
 
             SimilarFaces(
                 0,
+                0,
                 name,
                 confidence,
                 firstImage.link,

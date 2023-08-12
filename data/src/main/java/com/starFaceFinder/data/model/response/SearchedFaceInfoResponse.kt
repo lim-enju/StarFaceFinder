@@ -11,6 +11,7 @@ data class SearchedFaceInfoResponse(
     fun toFaceInfo(): FaceInfo? {
         val face = faces.firstOrNull()?: return null
         return FaceInfo(
+            0,
             face.gender?.value,
             face.gender?.confidence?.toFloat()?.times(100)?.toInt(),
             face.age?.value,

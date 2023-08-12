@@ -26,7 +26,7 @@ class CelebritysAdapter(
 
     inner class CelebrityViewHolder(private val binding: ViewCelebrityBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(celebrity: SimilarFaces?){
-            val confidence = (celebrity?.confidence ?: 0.0) * 100
+            val confidence = (celebrity?.similarConfidence ?: 0.0) * 100
             val roundConfidence = round(confidence*100) / 100
 
             binding.confidenceTxt.text = "일치율: $roundConfidence %"

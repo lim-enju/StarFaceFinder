@@ -2,31 +2,34 @@ package com.starFaceFinder.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
 data class SimilarFaces(
+    @PrimaryKey val id: Int,
+
     @SerializedName("value")
     @ColumnInfo(name = "value")
-    var value: String? = null,
+    val value: String? = null,
 
     @SerializedName("confidence")
     @ColumnInfo(name = "confidence")
-    var confidence: Double? = null,
+    val similarConfidence: Double? = null,
 
     @SerializedName("link")
     @ColumnInfo(name = "link")
-    var link: String? = null,
+    val link: String? = null,
 
     @SerializedName("thumbnail")
     @ColumnInfo(name = "thumbnail")
-    var thumbnail: String? = null,
+    val thumbnail: String? = null,
 
     @SerializedName("sizeheight")
-    @ColumnInfo(name = "sizeheight")
-    var sizeheight: Float,
+    @ColumnInfo(name = "size_height")
+    val sizeHeight: Float,
 
-    @SerializedName("sizewidth")
-    @ColumnInfo(name = "sizewidth")
-    var sizewidth: Float
+    @SerializedName("sizeidth")
+    @ColumnInfo(name = "size_width")
+    val sizeWidth: Float
 )

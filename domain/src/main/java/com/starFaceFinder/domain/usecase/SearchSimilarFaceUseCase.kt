@@ -26,6 +26,7 @@ class SearchSimilarFaceUseCase @Inject constructor(
                 searchedImages.items.firstOrNull { it.sizeheight > it.sizewidth } ?: return@map null
 
             SimilarFaces(
+                0,
                 name,
                 confidence,
                 firstImage.link,

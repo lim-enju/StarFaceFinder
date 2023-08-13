@@ -2,11 +2,9 @@ package com.example.myapplication.utils
 
 import android.graphics.Outline
 import android.graphics.drawable.GradientDrawable
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewOutlineProvider
 import androidx.databinding.BindingAdapter
-import com.example.myapplication.MainApplication
 
 @BindingAdapter("app:radius")
 fun View.setRadius(radius: Float) {

@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.TypedValue
 import androidx.lifecycle.AndroidViewModel
-import com.example.myapplication.MainApplication
+import com.example.myapplication.common.MainApplication
 
 //TODO:: 파일을 나눠서 가지고 있어야 하나..
 

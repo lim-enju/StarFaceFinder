@@ -14,15 +14,15 @@ import com.google.gson.annotations.SerializedName
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class SimilarFaces(
-    @PrimaryKey val id: Int,
+data class SimilarFace(
+    @PrimaryKey(autoGenerate = true) var id: Long,
 
     @ColumnInfo("fid")
-    val fid: Int,
+    var fid: Long,
 
     @SerializedName("value")
-    @ColumnInfo(name = "value")
-    val value: String? = null,
+    @ColumnInfo(name = "name")
+    val name: String? = null,
 
     @SerializedName("confidence")
     @ColumnInfo(name = "confidence")

@@ -3,6 +3,7 @@ package com.starFaceFinder.data.di
 import com.starFaceFinder.data.BuildConfig
 import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.source.SearchRepository
+import com.starFaceFinder.data.source.local.HistoryRepository
 import com.starFaceFinder.data.source.network.SearchDataSource
 import dagger.Module
 import dagger.Provides
@@ -51,9 +52,12 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideFindFaceDataSource(service:FindFaceService) = SearchDataSource(service)
+    fun provideFindFaceDataSource(service: FindFaceService) = SearchDataSource(service)
 
     @Singleton
     @Provides
-    fun provideFindFaceRepository(datasource:SearchDataSource) = SearchRepository(datasource)
+    fun provideHistoryRepositoryRepository(
+        datasource: SearchDataSource,
+        historyRepository: HistoryRepository
+    ) = SearchRepository(datasource, historyRepository)
 }

@@ -10,11 +10,11 @@ import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.SEARCH
 import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.example.myapplication.databinding.ViewNobodyCelebrityBinding
 import com.example.myapplication.databinding.ViewSearchingCelebrityBinding
-import com.starFaceFinder.data.model.SimilarFaces
+import com.starFaceFinder.data.model.SimilarFace
 import kotlin.math.round
 
 class CelebritysAdapter(
-    var celebrities: List<SimilarFaces> = listOf(),
+    var celebrities: List<SimilarFace> = listOf(),
     var isSearchingComplete: Boolean = false
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -25,13 +25,13 @@ class CelebritysAdapter(
     }
 
     inner class CelebrityViewHolder(private val binding: ViewCelebrityBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(celebrity: SimilarFaces?){
+        fun bind(celebrity: SimilarFace?){
             val confidence = (celebrity?.similarConfidence ?: 0.0) * 100
             val roundConfidence = round(confidence*100) / 100
 
             binding.confidenceTxt.text = "일치율: $roundConfidence %"
             binding.confidenceProgressBar.progress = roundConfidence.toInt()
-            binding.nameTxt.text = celebrity?.value
+            binding.nameTxt.text = celebrity?.name
 
             Glide
                 .with(binding.root.rootView.context)

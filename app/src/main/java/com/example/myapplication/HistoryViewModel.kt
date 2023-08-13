@@ -1,7 +1,9 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,12 +12,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    getHistoryFaceListUseCase: GetHistoryFaceListUseCase
+    private val getHistoryFaceListUseCase: GetHistoryFaceListUseCase
 ) : ViewModel() {
-    init {
+    fun init() {
         viewModelScope.launch(Dispatchers.IO) {
             val map = getHistoryFaceListUseCase.invoke()
-            map.entries
+            Log.d(TAG, ": ${map.entries}")
         }
     }
 }

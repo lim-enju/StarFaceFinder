@@ -1,16 +1,15 @@
 package com.starFaceFinder.data.source.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.starFaceFinder.data.model.SimilarFaces
+import com.starFaceFinder.data.model.SimilarFace
 
 @Dao
 interface SimilarFacesDao {
     @Insert
-    fun insertSimilarFacesDao(similarFaces: List<SimilarFaces>)
+    fun insertSimilarFaceDao(similarFaces: List<SimilarFace>)
 
-    @Query("DELETE FROM SimilarFaces WHERE fid In (:fids)")
+    @Query("DELETE FROM SimilarFace WHERE fid In (:fids)")
     fun deleteSimilarFace(vararg fids: Int)
 }

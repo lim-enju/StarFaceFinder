@@ -10,7 +10,7 @@ import com.example.myapplication.databinding.FragmentHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HistoryFragment: Fragment()  {
+class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
@@ -24,6 +24,11 @@ class HistoryFragment: Fragment()  {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.init()
     }
 
     //왜 null 이지..

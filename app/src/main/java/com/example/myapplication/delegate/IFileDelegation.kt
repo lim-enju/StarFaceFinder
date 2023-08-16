@@ -8,4 +8,6 @@ interface IFileDelegation {
     fun saveTempFile(bitmap: Bitmap): File
     fun uriToBitmap(uriString: String): Bitmap?
     fun compressImage(bitmap: Bitmap, maxSizeBytes: Long): Bitmap?
+
+    fun saveFile(filename: String, bitmap: Bitmap): File
 }

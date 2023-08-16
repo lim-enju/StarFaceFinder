@@ -79,4 +79,13 @@ class FileDelegation(
             outputStream.toByteArray().size
         )
     }
+
+    override fun saveFile(filename: String, bitmap: Bitmap): File {
+        context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            it.flush()
+            it.close()
+        }
+        return File(context.filesDir, filename)
+    }
 }

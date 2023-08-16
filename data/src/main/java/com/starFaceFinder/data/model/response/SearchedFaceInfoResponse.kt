@@ -1,17 +1,20 @@
 package com.starFaceFinder.data.model.response
 
+import androidx.core.net.toUri
 import com.google.gson.annotations.SerializedName
 import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.Position
+import java.io.File
 
 data class SearchedFaceInfoResponse(
     @SerializedName("info") var info: ImageInfo? = ImageInfo(),
     @SerializedName("faces") var faces: ArrayList<Faces> = arrayListOf()
 ){
-    fun toFaceInfo(): FaceInfo? {
+    fun toFaceInfo(file: File): FaceInfo? {
         val face = faces.firstOrNull()?: return null
         return FaceInfo(
             0,
+            file.toUri().path,
             face.gender?.value,
             face.gender?.confidence?.toFloat()?.times(100)?.toInt(),
             face.age?.value,

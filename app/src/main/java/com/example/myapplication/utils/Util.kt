@@ -33,3 +33,10 @@ fun Int.dpToPx (): Int = TypedValue.applyDimension(
 fun Float.dpToPx (): Int = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP, this,
     MainApplication.appContext.resources.displayMetrics).toInt()
+
+fun getRandomString(length: Int): String {
+    val charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    return (1..length)
+        .map { charset.random() }
+        .joinToString("")
+}

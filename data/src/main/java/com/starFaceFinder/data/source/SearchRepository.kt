@@ -57,7 +57,7 @@ class SearchRepository constructor(
         filename: String,
         image: File
     ): Result<FaceInfo?> = kotlin.runCatching {
-        searchDataSource.searchFaceInfo(name, filename, image).toFaceInfo()
+        searchDataSource.searchFaceInfo(name, filename, image).toFaceInfo(image)
     }.onSuccess { faceInfo ->
         //얼굴 인식에 성공할 경우 insert history
         faceInfo?.let {

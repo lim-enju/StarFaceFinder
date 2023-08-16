@@ -7,6 +7,7 @@ import com.example.myapplication.delegate.FileDelegation
 import com.example.myapplication.delegate.IFileDelegation
 import com.example.myapplication.utils.KEY_IS_SELECTED_URI
 import com.example.myapplication.utils.context
+import com.example.myapplication.utils.getRandomString
 import com.starFaceFinder.domain.usecase.SearchFaceInfoUseCase
 import com.starFaceFinder.domain.usecase.SearchSimilarFaceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +35,7 @@ class FindFaceViewModel @Inject constructor(
         val bitmap = fileDelegation.uriToBitmap(imageUri) ?: throw FileNotFoundException()
         val resizedBitmap =
             fileDelegation.compressImage(bitmap, 2 * 1024 * 1024) ?: throw FileNotFoundException()
-        val file = fileDelegation.saveTempFile(resizedBitmap)
+        val file = fileDelegation.saveFile("${getRandomString(20)}.jpg", resizedBitmap)
         emit(file)
     }
 

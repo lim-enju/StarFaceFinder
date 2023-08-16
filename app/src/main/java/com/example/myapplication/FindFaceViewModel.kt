@@ -31,7 +31,10 @@ class FindFaceViewModel @Inject constructor(
     val imageFile = flow {
         val imageUri =
             savedStateHandle.get<String>(KEY_IS_SELECTED_URI) ?: throw FileNotFoundException()
-        val file = fileDelegation.uriToFile(imageUri) ?: throw FileNotFoundException()
+        val bitmap = fileDelegation.uriToBitmap(imageUri) ?: throw FileNotFoundException()
+        val resizedBitmap =
+            fileDelegation.compressImage(bitmap, 2 * 1024 * 1024) ?: throw FileNotFoundException()
+        val file = fileDelegation.saveTempFile(resizedBitmap)
         emit(file)
     }
 
@@ -40,10 +43,7 @@ class FindFaceViewModel @Inject constructor(
             searchFaceInfoUseCase.invoke(file)
         }.flowOn(Dispatchers.IO)
 
-    //TODO:: resize 버그 수정하기
-    //        fileDelegation.resizeImage(file)?.let { resized ->
-//            searchSimilarFaceUseCase.invoke(resized)
-//        }
+
     //얼굴 정보 검색이 완료된 경우 유사한 연예인을 검색함
     val searchedSimilarFace =
         imageFile.combine(searchedFaceInfo) { file, faceInfoResult ->

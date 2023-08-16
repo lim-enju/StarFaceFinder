@@ -20,7 +20,10 @@ class FileDelegation(
         val cacheDir = context.cacheDir
         val file = File.createTempFile("prefix", ".jpg", cacheDir)
         val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+
+        // Bitmap 복제 및 압축
+        val cloneBitmap = bitmap.copy(bitmap.config, true)
+        cloneBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val bitmapData = bytes.toByteArray()
 
         //write the bytes in file
@@ -29,12 +32,15 @@ class FileDelegation(
         fos.flush()
         fos.close()
 
+        // recycle cloneBitmap
+        cloneBitmap.recycle()
+
         return file
     }
 
     override fun uriToFile(uri: String): File? = File(uri).takeIf { it.exists() }
 
-    override fun resizeImage(file: File, scaleTo: Int): File? {
+    override fun resizeImage(file: File, scaleTo: Int): File {
         val bmOptions = BitmapFactory.Options()
         bmOptions.inJustDecodeBounds = true
         BitmapFactory.decodeFile(file.absolutePath, bmOptions)
@@ -47,10 +53,10 @@ class FileDelegation(
         bmOptions.inJustDecodeBounds = false
         bmOptions.inSampleSize = scaleFactor
 
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return null
-        file.outputStream().use {
+        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+
+        context.openFileOutput(file.name, Context.MODE_PRIVATE).use {
             resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
         }
         return saveTempFile(resized)
     }

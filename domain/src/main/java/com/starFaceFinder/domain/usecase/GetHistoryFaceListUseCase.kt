@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetHistoryFaceListUseCase @Inject constructor(
     private val historyRepository: HistoryRepository
 ) {
-    fun invoke() = historyRepository.getAllHistory()
+    fun invoke(limit: Int, offset: Int) = historyRepository.getAllHistory(limit, offset)
 }

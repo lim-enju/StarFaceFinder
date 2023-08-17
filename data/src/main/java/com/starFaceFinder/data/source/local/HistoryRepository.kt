@@ -7,8 +7,8 @@ import javax.inject.Inject
 class HistoryRepository @Inject constructor(
     private val database: AppDatabase
 ) {
-    fun getAllHistory() =
-        database.faceInfoDao().getAllFaceHistory()
+    fun getAllHistory(limit: Int, offset: Int) =
+        database.faceInfoDao().getFaceHistories(limit, offset)
 
     fun insertFaceInfoHistory(faceInfo: FaceInfo) =
         database.faceInfoDao().insertFaceInfo(faceInfo)

@@ -9,16 +9,21 @@ import com.starFaceFinder.data.model.SimilarFace
 @Dao
 interface FaceInfoDao {
     //모든 히스토리 조회
-    @Query("SELECT * FROM FaceInfo" +
-            " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid"
+    @Query(
+        "SELECT * FROM FaceInfo" +
+                " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
+                " ORDER BY fid DESC" +
+                " LIMIT :limit OFFSET :offset"
     )
-    fun getAllFaceHistory(): Map<FaceInfo, List<SimilarFace>>
+    fun getFaceHistories(limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
 
     //히스토리 한건 조회
-    @Query("SELECT * FROM FaceInfo" +
-            " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
-            " WHERE FaceInfo.fid = :fid")
-    fun getFaceHistory(fid:Int): Map<FaceInfo, List<SimilarFace>>
+    @Query(
+        "SELECT * FROM FaceInfo" +
+                " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
+                " WHERE FaceInfo.fid = :fid"
+    )
+    fun getFaceHistory(fid: Int): Map<FaceInfo, List<SimilarFace>>
 
     @Insert
     fun insertFaceInfo(faceInfo: FaceInfo): Long

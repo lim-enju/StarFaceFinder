@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
@@ -43,7 +44,11 @@ class HistoryFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            historyAdapter = HistoryAdapter()
+            historyAdapter = HistoryAdapter { fid ->
+                val action =
+                    HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
+                findNavController().navigate(action)
+            }
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
         }

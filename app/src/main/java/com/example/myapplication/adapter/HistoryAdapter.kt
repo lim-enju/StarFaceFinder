@@ -10,7 +10,8 @@ import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.SimilarFace
 
 class HistoryAdapter(
-    var histories: ArrayList<Pair<FaceInfo, List<SimilarFace>>> = arrayListOf()
+    var histories: ArrayList<Pair<FaceInfo, List<SimilarFace>>> = arrayListOf(),
+    var onClickHistory: (fid: Long) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ViewHistoryBinding) :
@@ -35,6 +36,10 @@ class HistoryAdapter(
                     .dontAnimate()
                     .override(300, 300)
                     .into(profileImg)
+            }
+
+            binding.root.setOnClickListener {
+                onClickHistory(faceInfo.fid)
             }
         }
     }

@@ -23,7 +23,7 @@ interface FaceInfoDao {
                 " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
                 " WHERE FaceInfo.fid = :fid"
     )
-    fun getFaceHistory(fid: Int): Map<FaceInfo, List<SimilarFace>>
+    fun getFaceHistory(fid: Long): Map<FaceInfo, List<SimilarFace>>
 
     @Insert
     fun insertFaceInfo(faceInfo: FaceInfo): Long

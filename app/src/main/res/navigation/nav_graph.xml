@@ -42,7 +42,11 @@
         android:id="@+id/history_fragment"
         android:name="com.example.myapplication.HistoryFragment"
         android:label="HistoryFragment"
-        tools:layout="@layout/fragment_history"/>
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_history_fragment_to_historyDetailFragment"
+            app:destination="@id/historyDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/imageViewerFragment"
@@ -52,5 +56,13 @@
         <action
             android:id="@+id/action_imageViewerFragment_to_find_face_result_fragment"
             app:destination="@id/find_face_result_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.example.myapplication.HistoryDetailFragment"
+        android:label="HistoryDetailFragment" >
+        <argument
+            android:name="fid"
+            app:argType="long" />
     </fragment>
 </navigation>

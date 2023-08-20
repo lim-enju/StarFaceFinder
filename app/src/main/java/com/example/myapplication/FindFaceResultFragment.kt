@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.myapplication.adapter.CelebritysAdapter
+import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentFindFaceResultBinding
-import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -35,7 +33,7 @@ class FindFaceResultFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: FindFaceViewModel by viewModels()
-    private lateinit var celebritysAdapter: CelebritysAdapter
+    private lateinit var celebritiesAdapter: CelebritiesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,9 +52,9 @@ class FindFaceResultFragment : Fragment() {
 
     private fun initView() {
         with(binding.celebrityList) {
-            celebritysAdapter = CelebritysAdapter()
+            celebritiesAdapter = CelebritiesAdapter()
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = celebritysAdapter
+            adapter = celebritiesAdapter
         }
     }
 
@@ -84,9 +82,9 @@ class FindFaceResultFragment : Fragment() {
                             }
 
                             val faces = result.getOrNull() ?: arrayListOf()
-                            celebritysAdapter.isSearchingComplete = true
-                            celebritysAdapter.celebrities = faces
-                            celebritysAdapter.notifyItemRangeChanged(0, celebritysAdapter.itemCount)
+                            celebritiesAdapter.isSearchingComplete = true
+                            celebritiesAdapter.celebrities = faces
+                            celebritiesAdapter.notifyItemRangeChanged(0, celebritiesAdapter.itemCount)
                         }
                 }
                 launch {

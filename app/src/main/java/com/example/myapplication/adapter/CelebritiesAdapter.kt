@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.CELEBRITY
-import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.NOBODY
-import com.example.myapplication.adapter.CelebritysAdapter.ViewHolderType.SEARCHING
+import com.example.myapplication.adapter.CelebritiesAdapter.ViewHolderType.CELEBRITY
+import com.example.myapplication.adapter.CelebritiesAdapter.ViewHolderType.NOBODY
+import com.example.myapplication.adapter.CelebritiesAdapter.ViewHolderType.SEARCHING
 import com.example.myapplication.databinding.ViewCelebrityBinding
 import com.example.myapplication.databinding.ViewNobodyCelebrityBinding
 import com.example.myapplication.databinding.ViewSearchingCelebrityBinding
 import com.starFaceFinder.data.model.SimilarFace
 import kotlin.math.round
 
-class CelebritysAdapter(
+class CelebritiesAdapter(
     var celebrities: List<SimilarFace> = listOf(),
     var isSearchingComplete: Boolean = false
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

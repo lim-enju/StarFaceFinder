@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "462240723802",
+    "project_id": "star-face-finder",
+    "storage_bucket": "star-face-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462240723802:android:89563e893a4b071938f963",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462240723802-36dlvp9se7mrssdp8459e9f6r6bkbdum.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "a0f02651d6e4143d5d0d87d95fd14fc9cd07622b"
+          }
+        },
+        {
+          "client_id": "462240723802-lkl7lqelvg6h9r86kgbu20jkburu9i59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV1pwa6kSZcMCFwY0NG3c_phpbXk0lZoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462240723802-lkl7lqelvg6h9r86kgbu20jkburu9i59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

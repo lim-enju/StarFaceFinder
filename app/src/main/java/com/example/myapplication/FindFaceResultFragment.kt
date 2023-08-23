@@ -22,9 +22,12 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentFindFaceResultBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -62,14 +65,25 @@ class FindFaceResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.imageFile.collect {
-                        showCelebritiesLayoutTravelData(true)
-                        showFaceInfoLayoutTravelData(true)
-                    }
+                    viewModel.imageFile
+                        .catch {
+                            Toast.makeText(requireContext(), "파일을 찾지 못했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        .collect {
+                            showCelebritiesLayoutTravelData(true)
+                            showFaceInfoLayoutTravelData(true)
+                        }
                 }
                 launch {
                     viewModel.searchedSimilarFace
                         .filterNotNull()
+                        .catch {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.network_error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         .collect { result ->
                             showCelebritiesLayoutTravelData(false)
 
@@ -84,22 +98,31 @@ class FindFaceResultFragment : Fragment() {
                             val faces = result.getOrNull() ?: arrayListOf()
                             celebritiesAdapter.isSearchingComplete = true
                             celebritiesAdapter.celebrities = faces
-                            celebritiesAdapter.notifyItemRangeChanged(0, celebritiesAdapter.itemCount)
+                            celebritiesAdapter.notifyItemRangeChanged(
+                                0,
+                                celebritiesAdapter.itemCount
+                            )
                         }
                 }
                 launch {
                     viewModel.searchedFaceInfo
+                        .catch {
+                            Toast.makeText(
+                                requireContext(),
+                                it.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         .combine(viewModel.imageFile) { faceInfoResult, imageFile ->
-                            with(binding.layoutFaceInfo){
+                            with(binding.layoutFaceInfo) {
                                 showFaceInfoLayoutTravelData(false)
 
                                 val face = faceInfoResult.getOrNull()
 
-                                if(faceInfoResult.isFailure || face == null) {
+                                if (faceInfoResult.isFailure || face == null) {
                                     //TODO:: 에러처리
                                     return@combine
                                 }
-
 
                                 Glide
                                     .with(requireContext())
@@ -108,9 +131,9 @@ class FindFaceResultFragment : Fragment() {
                                     .into(selectedImg)
 
                                 //성별 표시
-                                var confidence = face.genderConfidence?:0
+                                var confidence = face.genderConfidence ?: 0
                                 var genderText: String? = null
-                                when(face.gender) {
+                                when (face.gender) {
                                     "male" -> {
                                         genderText = "남성"
                                         childGenderView.isVisible = false
@@ -124,17 +147,19 @@ class FindFaceResultFragment : Fragment() {
                                         femaleGenderView.setValue(confidence)
                                         maleGenderView.setValue(100 - confidence)
                                     }
+
                                     "child" -> {
                                         genderText = "어린이"
                                         maleGenderView.isVisible = false
                                         femaleGenderView.isVisible = false
                                         childGenderView.setValue(confidence)
                                     }
+
                                     else -> {}
                                 }
 
                                 //나이 표시
-                                confidence = face.ageConfidence?:0
+                                confidence = face.ageConfidence ?: 0
                                 ageTxt.text = "${face.age}세 $genderText ${confidence}%"
                             }
                         }.collect()

@@ -10,7 +10,11 @@ import java.io.File
 class SearchDataSource constructor(
     private val findFaceService: FindFaceService
 ) : ISearchDataSource {
-    override suspend fun searchSimilarFace(name: String, filename: String, image: File): SearchedSimilarFaceResponse =
+    override suspend fun searchSimilarFace(
+        name: String,
+        filename: String,
+        image: File
+    ): SearchedSimilarFaceResponse =
         findFaceService.searchSimilarFace(
             name = name.getBody("name"),
             filename = filename.getBody("filename"),
@@ -24,7 +28,7 @@ class SearchDataSource constructor(
         name: String,
         filename: String,
         image: File
-    ): SearchedFaceInfoResponse =
+    ): Result<SearchedFaceInfoResponse> =
         findFaceService.searchFaceInfo(
             name = name.getBody("name"),
             filename = filename.getBody("filename"),

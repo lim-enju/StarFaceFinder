@@ -40,5 +40,5 @@ interface FindFaceService {
         @Part image: MultipartBody.Part,
         @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
         @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret,
-    ): SearchedFaceInfoResponse
+    ): Result<SearchedFaceInfoResponse>
 }

@@ -1,6 +1,7 @@
 package com.starFaceFinder.data.di
 
 import com.starFaceFinder.data.BuildConfig
+import com.starFaceFinder.data.common.ResultCallAdapterFactory
 import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.source.SearchRepository
 import com.starFaceFinder.data.source.local.HistoryRepository
@@ -36,13 +37,21 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        resultCallAdapterFactory: ResultCallAdapterFactory
+    ): Retrofit {
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(provideBaseUrl())
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(resultCallAdapterFactory)
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideResultCallAdapterFactory() = ResultCallAdapterFactory()
 
     @Provides
     @Singleton

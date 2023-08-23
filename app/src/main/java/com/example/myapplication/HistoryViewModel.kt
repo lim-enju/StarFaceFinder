@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,26 +26,9 @@ class HistoryViewModel @Inject constructor(
     var offset = 0
     var limit = 10
 
-    private val _histories: MutableStateFlow<ArrayList<Pair<FaceInfo, List<SimilarFace>>>> = MutableStateFlow(
-        arrayListOf()
-    )
-    val histories = _histories.asStateFlow()
-
-    init {
-        getHistories()
-    }
-
-    fun getHistories() {
-        viewModelScope.launch(Dispatchers.IO){
-            val historyMap = getHistoryFaceListUseCase.invoke(limit, offset)
-            if(historyMap.isNotEmpty()){
-                offset++
-
-                val historyList = _histories.value + historyMap.map { entry ->
-                    Pair(entry.key, entry.value)
-                }
-                _histories.emit(ArrayList(historyList))
+    fun getHistories() =
+        getHistoryFaceListUseCase.invoke(limit, offset)
+            .onEach { histories ->
+                if(histories.isNotEmpty()) offset ++
             }
-        }
-    }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentHistoryDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -54,7 +56,9 @@ class HistoryDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.historyDetail.collect { history ->
+                    viewModel.historyDetail.catch {
+                        Toast.makeText(requireContext(), "히스토리 조회 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                    }.collect { history ->
                         val faceInfo = history.keys.first()
                         val celebrity = history[faceInfo]?: listOf()
 

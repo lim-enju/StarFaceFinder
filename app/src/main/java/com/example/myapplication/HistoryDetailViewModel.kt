@@ -18,6 +18,8 @@ class HistoryDetailViewModel @Inject constructor(
     val historyDetail = flow {
         val fid = savedStateHandle.get<Long>(KEY_IS_FID) ?: return@flow
         val history = getHistoryDetailUseCase.invoke(fid)
+        check(history.size != 1) { "" }
+        check(history.values.first().isNotEmpty()) { "" }
         emit(history)
     }.flowOn(Dispatchers.IO)
 }

@@ -16,6 +16,7 @@ import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -58,9 +59,11 @@ class HistoryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.histories.collect { histories ->
-                        Log.d(TAG, "initObserver: ${histories.size}")
-                        historyAdapter.histories = histories
+                    viewModel.getHistories().collect { historiesMap ->
+                        val histories = historyAdapter.histories + historiesMap.map { entry ->
+                            Pair(entry.key, entry.value)
+                        }
+                        historyAdapter.histories = ArrayList(histories)
                         historyAdapter.notifyDataSetChanged()
                     }
                 }

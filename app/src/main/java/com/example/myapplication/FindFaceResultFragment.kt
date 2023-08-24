@@ -54,6 +54,8 @@ class FindFaceResultFragment : Fragment() {
     }
 
     private fun initView() {
+        showFaceInfoLayoutTravelData(true)
+
         with(binding.celebrityList) {
             celebritiesAdapter = CelebritiesAdapter()
             layoutManager = LinearLayoutManager(requireContext())
@@ -69,10 +71,7 @@ class FindFaceResultFragment : Fragment() {
                         .catch {
                             Toast.makeText(requireContext(), "파일을 찾지 못했습니다.", Toast.LENGTH_SHORT).show()
                         }
-                        .collect {
-                            showCelebritiesLayoutTravelData(true)
-                            showFaceInfoLayoutTravelData(true)
-                        }
+                        .collect()
                 }
                 launch {
                     viewModel.searchedSimilarFace
@@ -85,16 +84,6 @@ class FindFaceResultFragment : Fragment() {
                             ).show()
                         }
                         .collect { result ->
-                            showCelebritiesLayoutTravelData(false)
-
-                            if (result.isFailure) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    R.string.network_error,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
                             val faces = result.getOrNull() ?: arrayListOf()
                             celebritiesAdapter.isSearchingComplete = true
                             celebritiesAdapter.celebrities = faces
@@ -117,12 +106,7 @@ class FindFaceResultFragment : Fragment() {
                             with(binding.layoutFaceInfo) {
                                 showFaceInfoLayoutTravelData(false)
 
-                                val face = faceInfoResult.getOrNull()
-
-                                if (faceInfoResult.isFailure || face == null) {
-                                    //TODO:: 에러처리
-                                    return@combine
-                                }
+                                val face = faceInfoResult.getOrNull()?: return@combine
 
                                 Glide
                                     .with(requireContext())
@@ -190,18 +174,6 @@ class FindFaceResultFragment : Fragment() {
         )
 
         imageView.setImageBitmap(bitmap)
-    }
-
-    private fun showCelebritiesLayoutTravelData(isLoading: Boolean) {
-        if (isLoading) {
-            binding.shimmerCelebritiesLayout.startShimmer()
-            binding.shimmerCelebritiesLayout.visibility = View.VISIBLE
-            binding.celebrityList.visibility = View.GONE
-        } else {
-            binding.shimmerCelebritiesLayout.stopShimmer()
-            binding.shimmerCelebritiesLayout.visibility = View.GONE
-            binding.celebrityList.visibility = View.VISIBLE
-        }
     }
 
     private fun showFaceInfoLayoutTravelData(isLoading: Boolean) {

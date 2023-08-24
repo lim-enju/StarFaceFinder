@@ -14,14 +14,14 @@ class SearchDataSource constructor(
         name: String,
         filename: String,
         image: File
-    ): SearchedSimilarFaceResponse =
+    ): Result<SearchedSimilarFaceResponse> =
         findFaceService.searchSimilarFace(
             name = name.getBody("name"),
             filename = filename.getBody("filename"),
             image = image.getBody("image")
         )
 
-    override suspend fun searchImage(query: String): SearchedImageResponse =
+    override suspend fun searchImage(query: String): Result<SearchedImageResponse> =
         findFaceService.searchImage(query)
 
     override suspend fun searchFaceInfo(

@@ -46,7 +46,7 @@ class FindFaceViewModel @Inject constructor(
         val bitmap = fileDelegation.uriToBitmap(imageUri)
         check(bitmap != null)
 
-        val resizedBitmap = fileDelegation.compressImage(bitmap, 2 * 1024 * 1024)
+        val resizedBitmap = fileDelegation.compressImage(bitmap, 500 * 1024)
         check(resizedBitmap != null)
 
         val file = fileDelegation.saveFile("${getRandomString(20)}.jpg", resizedBitmap)
@@ -57,6 +57,7 @@ class FindFaceViewModel @Inject constructor(
         .map { file ->
             val result = searchFaceInfoUseCase.invoke(file)
             check(result.isSuccess) { result.exceptionOrNull()?.message ?: "" }
+            check(result.getOrNull()?.fid != null) { "닮은 연예인을 찾지 못했습니다." }
             result
         }.flowOn(Dispatchers.IO)
 
@@ -65,7 +66,7 @@ class FindFaceViewModel @Inject constructor(
     val searchedSimilarFace =
         imageFile.combine(searchedFaceInfo) { file, faceInfoResult ->
             val fid = faceInfoResult.getOrNull()?.fid
-            check(fid != null) { throw Throwable("fid 값이 올바르지 않습니다.") }
+            check(fid != null) { "fid 값이 올바르지 않습니다." }
             searchSimilarFaceUseCase.invoke(fid, file)
         }.flowOn(Dispatchers.IO)
 }

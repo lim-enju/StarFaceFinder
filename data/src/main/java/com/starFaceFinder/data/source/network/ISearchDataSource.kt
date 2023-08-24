@@ -10,9 +10,10 @@ interface ISearchDataSource {
         name: String,
         filename: String,
         image: File
-    ): SearchedSimilarFaceResponse
+    ): Result<SearchedSimilarFaceResponse>
 
-    suspend fun searchImage(query: String): SearchedImageResponse
+    suspend fun searchImage(query: String)
+    : Result<SearchedImageResponse>
 
     suspend fun searchFaceInfo(
         name: String,

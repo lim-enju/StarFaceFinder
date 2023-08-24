@@ -22,14 +22,14 @@ interface FindFaceService {
         @Part image: MultipartBody.Part,
         @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
         @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret
-    ): SearchedSimilarFaceResponse
+    ): Result<SearchedSimilarFaceResponse>
 
     @GET("search/image")
     suspend fun searchImage(
         @Query("query") query: String,
         @Header("X-Naver-Client-Id") naverClientId: String = BuildConfig.NaverClientId,
         @Header("X-Naver-Client-secret") naverClientSecret: String = BuildConfig.NaverClientSecret
-    ): SearchedImageResponse
+    ): Result<SearchedImageResponse>
 
     //TODO:: header 위치 이동
     @Multipart

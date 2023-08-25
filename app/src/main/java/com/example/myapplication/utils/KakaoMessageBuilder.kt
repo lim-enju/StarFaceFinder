@@ -3,77 +3,42 @@ package com.example.myapplication.utils
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient
-import com.kakao.sdk.template.model.Button
 import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
-import com.kakao.sdk.template.model.ItemContent
-import com.kakao.sdk.template.model.ItemInfo
 import com.kakao.sdk.template.model.Link
-import com.kakao.sdk.template.model.Social
 import com.starFaceFinder.data.common.TAG
 
 object KakaoMessageBuilder {
 
-    private val defaultFeed = FeedTemplate(
-        content = Content(
-            title = "오늘의 디저트",
-            description = "#케익 #딸기 #삼평동 #카페 #분위기 #소개팅",
-            imageUrl = "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
-            link = Link(
-                webUrl = "https://developers.kakao.com",
-                mobileWebUrl = "https://developers.kakao.com"
-            )
-        ),
-        itemContent = ItemContent(
-            profileText = "Kakao",
-            profileImageUrl = "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
-            titleImageUrl = "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
-            titleImageText = "Cheese cake",
-            titleImageCategory = "Cake",
-            items = listOf(
-                ItemInfo(item = "cake1", itemOp = "1000원"),
-                ItemInfo(item = "cake2", itemOp = "2000원"),
-                ItemInfo(item = "cake3", itemOp = "3000원"),
-                ItemInfo(item = "cake4", itemOp = "4000원"),
-                ItemInfo(item = "cake5", itemOp = "5000원")
-            ),
-            sum = "Total",
-            sumOp = "15000원"
-        ),
-        social = Social(
-            likeCount = 286,
-            commentCount = 45,
-            sharedCount = 845
-        ),
-        buttons = listOf(
-            Button(
-                "웹으로 보기",
-                Link(
+    private const val imageUrl =
+        "https://en.wikipedia.org/wiki/FaceApp#/media/File:FaceApp_logo.jpg"
+
+    private fun getDefaultFeed(title: String, description: String, url: String? = null) =
+        FeedTemplate(
+            content = Content(
+                title = title,
+                description = description,
+                imageUrl = url ?: imageUrl,
+                link = Link(
                     webUrl = "https://developers.kakao.com",
                     mobileWebUrl = "https://developers.kakao.com"
                 )
             ),
-            Button(
-                "앱으로 보기",
-                Link(
-                    androidExecutionParams = mapOf("key1" to "value1", "key2" to "value2"),
-                    iosExecutionParams = mapOf("key1" to "value1", "key2" to "value2")
-                )
-            )
         )
-    )
 
-    fun shareKakaoMessage(context: Context) {
+    fun shareKakaoMessage(context: Context, title: String, description: String, imageUrl: String? = null) {
         // 피드 메시지 보내기
 
         // 카카오톡 설치여부 확인
         if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
             // 카카오톡으로 카카오톡 공유 가능
-            ShareClient.instance.shareDefault(context, defaultFeed) { sharingResult, error ->
+            ShareClient.instance.shareDefault(
+                context,
+                getDefaultFeed(title, description, imageUrl)
+            ) { sharingResult, error ->
                 if (error != null) {
                     Log.e(TAG, "카카오톡 공유 실패", error)
                 } else if (sharingResult != null) {
@@ -88,7 +53,8 @@ object KakaoMessageBuilder {
         } else {
             // 카카오톡 미설치: 웹 공유 사용 권장
             // 웹 공유 예시 코드
-            val sharerUrl = WebSharerClient.instance.makeDefaultUrl(defaultFeed)
+            val sharerUrl =
+                WebSharerClient.instance.makeDefaultUrl(getDefaultFeed(title, description, imageUrl))
 
             // CustomTabs으로 웹 브라우저 열기
 

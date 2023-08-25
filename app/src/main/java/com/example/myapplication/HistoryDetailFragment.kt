@@ -50,10 +50,6 @@ class HistoryDetailFragment : Fragment() {
             celebritiesAdapter = CelebritiesAdapter()
             celebrityList.layoutManager = LinearLayoutManager(requireContext())
             celebrityList.adapter = celebritiesAdapter
-
-            kakaoShareBtn.setOnClickListener {
-                KakaoMessageBuilder.shareKakaoMessage(requireContext())
-            }
         }
     }
 
@@ -108,7 +104,13 @@ class HistoryDetailFragment : Fragment() {
 
                             //나이 표시
                             confidence = faceInfo.ageConfidence?:0
-                            ageTxt.text = "${faceInfo.age}세 $genderText ${confidence}%"
+                            val ageInfoTxt = "${faceInfo.age}세 $genderText ${confidence}%"
+                            ageTxt.text = ageInfoTxt
+
+                            binding.kakaoShareBtn.isVisible = true
+                            binding.kakaoShareBtn.setOnClickListener {
+                                KakaoMessageBuilder.shareKakaoMessage(requireContext(), ageInfoTxt, celebrity.first().name?:"")
+                            }
                         }
                     }
                 }

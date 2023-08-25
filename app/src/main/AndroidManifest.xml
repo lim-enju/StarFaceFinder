@@ -12,6 +12,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <!--queries에 카카오톡 패키지 추가-->
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
+
     <application
         android:name=".common.MainApplication"
         android:allowBackup="true"
@@ -25,13 +30,23 @@
         tools:targetApi="31"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- "kakao${YOUR_NATIVE_APP_KEY}://kakaolink" 형식의 앱 실행 스킴을 설정하는데 사용 -->
+                <data android:host="kakaolink"
+                    android:scheme="kakaoce657d783b6b9e9df95bc640f5f92f6a" />
             </intent-filter>
         </activity>
 

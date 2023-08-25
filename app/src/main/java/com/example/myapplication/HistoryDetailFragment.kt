@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentHistoryDetailBinding
+import com.example.myapplication.utils.KakaoMessageBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -49,6 +50,10 @@ class HistoryDetailFragment : Fragment() {
             celebritiesAdapter = CelebritiesAdapter()
             celebrityList.layoutManager = LinearLayoutManager(requireContext())
             celebrityList.adapter = celebritiesAdapter
+
+            kakaoShareBtn.setOnClickListener {
+                KakaoMessageBuilder.shareKakaoMessage(requireContext())
+            }
         }
     }
 

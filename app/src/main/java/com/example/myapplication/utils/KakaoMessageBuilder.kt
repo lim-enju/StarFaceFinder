@@ -6,6 +6,7 @@ import android.util.Log
 import com.kakao.sdk.common.util.KakaoCustomTabsClient
 import com.kakao.sdk.share.ShareClient
 import com.kakao.sdk.share.WebSharerClient
+import com.kakao.sdk.template.model.Button
 import com.kakao.sdk.template.model.Content
 import com.kakao.sdk.template.model.FeedTemplate
 import com.kakao.sdk.template.model.Link
@@ -16,7 +17,7 @@ object KakaoMessageBuilder {
     private const val imageUrl =
         "https://en.wikipedia.org/wiki/FaceApp#/media/File:FaceApp_logo.jpg"
 
-    private fun getDefaultFeed(title: String, description: String, url: String? = null) =
+    private fun getDefaultFeed(title: String, description: String, params: Map<String, String>? = null, url: String? = null) =
         FeedTemplate(
             content = Content(
                 title = title,
@@ -27,9 +28,18 @@ object KakaoMessageBuilder {
                     mobileWebUrl = "https://developers.kakao.com"
                 )
             ),
+            buttons = listOf(
+                Button(
+                    "앱으로 보기",
+                    Link(
+                        androidExecutionParams = params,
+                        iosExecutionParams = params
+                    )
+                )
+            )
         )
 
-    fun shareKakaoMessage(context: Context, title: String, description: String, imageUrl: String? = null) {
+    fun shareKakaoMessage(context: Context, title: String, description: String, params: Map<String, String>? = null, imageUrl: String? = null) {
         // 피드 메시지 보내기
 
         // 카카오톡 설치여부 확인
@@ -37,7 +47,7 @@ object KakaoMessageBuilder {
             // 카카오톡으로 카카오톡 공유 가능
             ShareClient.instance.shareDefault(
                 context,
-                getDefaultFeed(title, description, imageUrl)
+                getDefaultFeed(title, description, params, imageUrl)
             ) { sharingResult, error ->
                 if (error != null) {
                     Log.e(TAG, "카카오톡 공유 실패", error)
@@ -54,7 +64,7 @@ object KakaoMessageBuilder {
             // 카카오톡 미설치: 웹 공유 사용 권장
             // 웹 공유 예시 코드
             val sharerUrl =
-                WebSharerClient.instance.makeDefaultUrl(getDefaultFeed(title, description, imageUrl))
+                WebSharerClient.instance.makeDefaultUrl(getDefaultFeed(title, description, params, imageUrl))
 
             // CustomTabs으로 웹 브라우저 열기
 

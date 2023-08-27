@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentHistoryDetailBinding
+import com.example.myapplication.utils.ActionType
+import com.example.myapplication.utils.DeepLinkData
 import com.example.myapplication.utils.KakaoMessageBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
@@ -109,7 +111,8 @@ class HistoryDetailFragment : Fragment() {
 
                             binding.kakaoShareBtn.isVisible = true
                             binding.kakaoShareBtn.setOnClickListener {
-                                KakaoMessageBuilder.shareKakaoMessage(requireContext(), ageInfoTxt, celebrity.first().name?:"")
+                                val params = mapOf("action" to ActionType.VIEW_HISTORY.name, "fid" to faceInfo.fid.toString())
+                                KakaoMessageBuilder.shareKakaoMessage(requireContext(), ageInfoTxt, celebrity.first().name?:"", params)
                             }
                         }
                     }

@@ -60,9 +60,12 @@
     <fragment
         android:id="@+id/historyDetailFragment"
         android:name="com.example.myapplication.HistoryDetailFragment"
-        android:label="HistoryDetailFragment" >
+        android:label="HistoryDetailFragment">
         <argument
             android:name="fid"
             app:argType="long" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="kakaoce657d783b6b9e9df95bc640f5f92f6a://kakaolink?action={action}&amp;fid={fid}" />
     </fragment>
 </navigation>

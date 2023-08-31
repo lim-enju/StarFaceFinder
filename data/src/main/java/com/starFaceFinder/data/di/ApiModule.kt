@@ -1,14 +1,17 @@
 package com.starFaceFinder.data.di
 
+import android.content.Context
 import com.starFaceFinder.data.BuildConfig
 import com.starFaceFinder.data.common.ResultCallAdapterFactory
 import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.source.SearchRepository
+import com.starFaceFinder.data.source.UserPreferencesRepository
 import com.starFaceFinder.data.source.local.HistoryRepository
 import com.starFaceFinder.data.source.network.SearchDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -69,4 +72,10 @@ object ApiModule {
         datasource: SearchDataSource,
         historyRepository: HistoryRepository
     ) = SearchRepository(datasource, historyRepository)
+
+    @Singleton
+    @Provides
+    fun provideUserPreferencesRepository(
+        @ApplicationContext context: Context
+    ) = UserPreferencesRepository(context)
 }

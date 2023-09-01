@@ -6,6 +6,15 @@
     android:padding="12dp">
 
     <ImageView
+        android:id="@+id/favorite_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/border_favorite"
+        app:tint="@color/red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
         android:id="@+id/profile_img"
         android:layout_width="100dp"
         android:layout_height="100dp"

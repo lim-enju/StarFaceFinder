@@ -32,6 +32,7 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun updateFavoriteFaceInfo(fid: Long, isFavorite: Boolean) {
         context.dataStore.updateData { preferences ->
+            Log.d(TAG, "repo: $fid $isFavorite")
             if (isFavorite) {
                 preferences.toBuilder().addFavoritesFaceInfo(fid).build()
             } else {

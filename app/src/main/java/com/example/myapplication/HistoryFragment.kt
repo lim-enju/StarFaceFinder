@@ -16,7 +16,8 @@ import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -45,11 +46,16 @@ class HistoryFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            historyAdapter = HistoryAdapter { fid ->
-                val action =
-                    HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
-                findNavController().navigate(action)
-            }
+            historyAdapter = HistoryAdapter(
+                onClickHistory = { fid ->
+                    val action =
+                        HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
+                    findNavController().navigate(action)
+                },
+                onClickFavorite = { fid, isFavorite ->
+                    viewModel.updateFavoriteFaceInfo(fid, isFavorite)
+                }
+            )
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
         }
@@ -57,15 +63,25 @@ class HistoryFragment : Fragment() {
 
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    viewModel.getHistories().collect { historiesMap ->
-                        val histories = historyAdapter.histories + historiesMap.map { entry ->
+                    //TODO:: 페이징 처리
+                    viewModel.histories.combine(viewModel.userPreferences) { historiesMap, pref ->
+                        val favorites = pref.favoritesFaceInfo
+//                        val histories = historyAdapter.histories + historiesMap.map { entry ->
+//                            Pair(entry.key, entry.value)
+//                        }
+                        val histories = historiesMap.map { entry ->
                             Pair(entry.key, entry.value)
                         }
                         historyAdapter.histories = ArrayList(histories)
-                        historyAdapter.notifyDataSetChanged()
-                    }
+                        historyAdapter.notifyItemRangeChanged(
+                            0,
+                            historyAdapter.histories.size,
+                            favorites
+                        )
+                        Log.d(TAG, "initObserver: $pref")
+                    }.collect()
                 }
             }
         }

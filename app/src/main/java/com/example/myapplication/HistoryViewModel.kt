@@ -4,31 +4,37 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.starFaceFinder.data.common.TAG
-import com.starFaceFinder.data.model.FaceInfo
-import com.starFaceFinder.data.model.SimilarFace
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
+import com.starFaceFinder.domain.usecase.GetUserPreferencesUseCase
+import com.starFaceFinder.domain.usecase.UpdateFavoritesFaceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val getHistoryFaceListUseCase: GetHistoryFaceListUseCase
+    getHistoryFaceListUseCase: GetHistoryFaceListUseCase,
+    userPreferencesUseCase: GetUserPreferencesUseCase,
+    private val updateFavoritesFaceInfoUseCase: UpdateFavoritesFaceInfoUseCase
 ) : ViewModel() {
 
     var offset = 0
     var limit = 10
 
-    fun getHistories() =
-        getHistoryFaceListUseCase.invoke(limit, offset)
-            .onEach { histories ->
-                if(histories.isNotEmpty()) offset ++
-            }
+    val histories = getHistoryFaceListUseCase.invoke(limit, offset)
+        .onEach { histories ->
+            Log.d(TAG, "getHistories: ${histories.size}")
+            if (histories.isNotEmpty()) offset += histories.size
+        }
+
+    val userPreferences = userPreferencesUseCase.invoke()
+
+    fun updateFavoriteFaceInfo(fid: Long, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d(TAG, "updateFavoriteFaceInfo: $fid $isFavorite")
+            updateFavoritesFaceInfoUseCase.invoke(fid, isFavorite)
+        }
+    }
 }

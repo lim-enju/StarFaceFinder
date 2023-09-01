@@ -25,6 +25,4 @@ class MainActivity : AppCompatActivity() {
             viewModel.handleDeepLinkData(data)
         }
     }
-
-
 }

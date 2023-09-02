@@ -9,14 +9,15 @@ import com.starFaceFinder.domain.usecase.GetUserPreferencesUseCase
 import com.starFaceFinder.domain.usecase.UpdateFavoritesFaceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     getHistoryFaceListUseCase: GetHistoryFaceListUseCase,
-    userPreferencesUseCase: GetUserPreferencesUseCase,
     private val updateFavoritesFaceInfoUseCase: UpdateFavoritesFaceInfoUseCase
 ) : ViewModel() {
 
@@ -25,11 +26,8 @@ class HistoryViewModel @Inject constructor(
 
     val histories = getHistoryFaceListUseCase.invoke(limit, offset)
         .onEach { histories ->
-            Log.d(TAG, "getHistories: ${histories.size}")
             if (histories.isNotEmpty()) offset += histories.size
         }
-
-    val userPreferences = userPreferencesUseCase.invoke()
 
     fun updateFavoriteFaceInfo(fid: Long, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

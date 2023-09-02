@@ -1,10 +1,20 @@
 package com.starFaceFinder.domain.usecase
 
 import com.starFaceFinder.data.source.local.HistoryRepository
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class GetHistoryFaceListUseCase @Inject constructor(
-    private val historyRepository: HistoryRepository
+    private val historyRepository: HistoryRepository,
+    private val userPreferencesUseCase: GetUserPreferencesUseCase
 ) {
-    fun invoke(limit: Int, offset: Int) = historyRepository.getAllHistory(limit, offset)
+    fun invoke(limit: Int, offset: Int) =
+        historyRepository
+            .getAllHistory(limit, offset)
+            .combine(userPreferencesUseCase.pref) { history, pref ->
+                history.forEach { (faceInfo, _) ->
+                    faceInfo.isFavorite = pref.favoritesFaceInfo.contains(faceInfo.fid)
+                }
+                history
+            }
 }

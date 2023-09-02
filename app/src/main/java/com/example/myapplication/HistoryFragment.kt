@@ -58,6 +58,7 @@ class HistoryFragment : Fragment() {
             )
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
+            historyList.itemAnimator = null
         }
     }
 
@@ -66,22 +67,17 @@ class HistoryFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     //TODO:: 페이징 처리
-                    viewModel.histories.combine(viewModel.userPreferences) { historiesMap, pref ->
-                        val favorites = pref.favoritesFaceInfo
-//                        val histories = historyAdapter.histories + historiesMap.map { entry ->
-//                            Pair(entry.key, entry.value)
-//                        }
+                    viewModel.histories.collect { historiesMap ->
+                        Log.d(TAG, "initObserver: ${historiesMap.size}")
                         val histories = historiesMap.map { entry ->
                             Pair(entry.key, entry.value)
                         }
                         historyAdapter.histories = ArrayList(histories)
                         historyAdapter.notifyItemRangeChanged(
                             0,
-                            historyAdapter.histories.size,
-                            favorites
+                            historyAdapter.histories.size
                         )
-                        Log.d(TAG, "initObserver: $pref")
-                    }.collect()
+                    }
                 }
             }
         }

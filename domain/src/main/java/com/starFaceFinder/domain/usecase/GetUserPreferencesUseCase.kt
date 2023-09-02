@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetUserPreferencesUseCase @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository
 ) {
-    fun invoke() = userPreferencesRepository.userPreferencesFlow
+    val pref = userPreferencesRepository.userPreferencesFlow
 }

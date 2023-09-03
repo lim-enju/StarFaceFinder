@@ -1,20 +1,27 @@
 package com.starFaceFinder.domain.usecase
 
+import android.util.Log
 import com.starFaceFinder.data.source.local.HistoryRepository
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
+import androidx.paging.map
+import com.starFaceFinder.data.common.TAG
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 
 class GetHistoryFaceListUseCase @Inject constructor(
-    private val historyRepository: HistoryRepository,
-    private val userPreferencesUseCase: GetUserPreferencesUseCase
+    historyRepository: HistoryRepository,
+    userPreferencesUseCase: GetUserPreferencesUseCase
 ) {
-    fun invoke(limit: Int, offset: Int) =
+    val histories =
         historyRepository
-            .getAllHistory(limit, offset)
-            .combine(userPreferencesUseCase.pref) { history, pref ->
-                history.forEach { (faceInfo, _) ->
+            .histories
+            .combine(userPreferencesUseCase.pref){ pagerData, pref ->
+                pagerData.map { history ->
+                    val faceInfo = history.faceInfo
                     faceInfo.isFavorite = pref.favoritesFaceInfo.contains(faceInfo.fid)
                 }
-                history
+                pagerData
             }
 }

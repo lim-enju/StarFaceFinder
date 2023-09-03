@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
-import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -66,22 +63,12 @@ class HistoryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    //TODO:: 페이징 처리
-                    viewModel.histories.collect { historiesMap ->
-                        Log.d(TAG, "initObserver: ${historiesMap.size}")
-                        val histories = historiesMap.map { entry ->
-                            Pair(entry.key, entry.value)
-                        }
-                        historyAdapter.histories = ArrayList(histories)
-                        historyAdapter.notifyItemRangeChanged(
-                            0,
-                            historyAdapter.histories.size
-                        )
+                    viewModel.histories.collectLatest { pagingData ->
+                        historyAdapter.submitData(pagingData)
                     }
                 }
             }
         }
-
     }
 
     //왜 null 이지..

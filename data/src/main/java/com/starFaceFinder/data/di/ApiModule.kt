@@ -68,7 +68,7 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideHistoryRepositoryRepository(
+    fun provideSearchRepositoryRepository(
         datasource: SearchDataSource,
         historyRepository: HistoryRepository
     ) = SearchRepository(datasource, historyRepository)

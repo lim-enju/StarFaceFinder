@@ -2,12 +2,14 @@ package com.starFaceFinder.data.source
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.dataStore
 import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.data.datastore.UserPreferences
 import com.starFaceFinder.data.model.UserData
 import com.starFaceFinder.data.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject

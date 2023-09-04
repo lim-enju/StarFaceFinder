@@ -1,6 +1,5 @@
 package com.example.myapplication.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,13 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ViewHistoryBinding
-import com.example.myapplication.databinding.ViewHistoryEmptyBinding
 import com.example.myapplication.utils.HistoryFaceInfoComparator
-import com.starFaceFinder.data.common.TAG
-import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.FaceInfoHistory
-import com.starFaceFinder.data.model.SimilarFace
-import java.lang.Exception
 
 class HistoryAdapter(
     var onClickHistory: (fid: Long) -> Unit,
@@ -53,9 +47,14 @@ class HistoryAdapter(
 
             binding.favoriteBtn.setOnClickListener {
                 onClickFavorite(faceInfo.fid, !faceInfo.isFavorite)
+                faceInfo.isFavorite = !faceInfo.isFavorite
+                updateFavoriteImage(faceInfo.isFavorite)
             }
+            updateFavoriteImage(faceInfo.isFavorite)
+        }
 
-            val img = if (faceInfo.isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
+        private fun updateFavoriteImage(isFavorite: Boolean) {
+            val img = if (isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
             binding.favoriteBtn.setImageDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,
@@ -67,12 +66,12 @@ class HistoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return HistoryViewHolder(
-                    ViewHistoryBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
+            ViewHistoryBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

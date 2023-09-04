@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
+import com.starFaceFinder.domain.usecase.GetUserPreferencesUseCase
 import com.starFaceFinder.domain.usecase.UpdateFavoritesFaceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

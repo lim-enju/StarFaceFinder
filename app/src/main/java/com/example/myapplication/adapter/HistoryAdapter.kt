@@ -65,9 +65,6 @@ class HistoryAdapter(
         }
     }
 
-    inner class EmptyViewHolder(private val binding: ViewHistoryEmptyBinding) :
-        RecyclerView.ViewHolder(binding.root)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return HistoryViewHolder(
                     ViewHistoryBinding.inflate(
@@ -77,19 +74,6 @@ class HistoryAdapter(
                     )
                 )
     }
-//        when {
-//            histories.isNotEmpty() -> {
-//                HistoryViewHolder(
-//                    ViewHistoryBinding.inflate(
-//                        LayoutInflater.from(parent.context),
-//                        parent,
-//                        false
-//                    )
-//                )
-//            }
-//
-//            else -> EmptyViewHolder(ViewHistoryEmptyBinding.inflate(LayoutInflater.from(parent.context)))
-//        }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {

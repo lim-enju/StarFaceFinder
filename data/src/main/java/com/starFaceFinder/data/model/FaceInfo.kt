@@ -12,5 +12,4 @@ data class FaceInfo(
     @ColumnInfo("gender_confidence") val genderConfidence: Int? = null,
     @ColumnInfo("age") val age: String? = null,
     @ColumnInfo("age_confidence") val ageConfidence: Int? = null,
-    var isFavorite: Boolean = false
 )

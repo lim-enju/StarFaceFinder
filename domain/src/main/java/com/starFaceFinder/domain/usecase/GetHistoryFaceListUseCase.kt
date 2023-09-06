@@ -6,15 +6,8 @@ import javax.inject.Inject
 
 class GetHistoryFaceListUseCase @Inject constructor(
     private val historyRepository: HistoryRepository,
-    private val userPreferencesUseCase: GetUserPreferencesUseCase
 ) {
     fun invoke(limit: Int, offset: Int) =
         historyRepository
             .getAllHistory(limit, offset)
-            .combine(userPreferencesUseCase.pref) { history, pref ->
-                history.forEach { (faceInfo, _) ->
-                    faceInfo.isFavorite = pref.favoritesFaceInfo.contains(faceInfo.fid)
-                }
-                history
-            }
 }

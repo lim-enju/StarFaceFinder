@@ -9,23 +9,24 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ViewHistoryBinding
 import com.example.myapplication.databinding.ViewHistoryEmptyBinding
+import com.example.myapplication.model.HistoryItemUiState
+import com.example.myapplication.model.HistoryUiState
 import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.SimilarFace
 import java.lang.Exception
 
 class HistoryAdapter(
-    var histories: ArrayList<Pair<FaceInfo, List<SimilarFace>>> = arrayListOf(),
-    var onClickHistory: (fid: Long) -> Unit,
-    var onClickFavorite: (fid: Long, isFavorite: Boolean) -> Unit
+    var histories: ArrayList<HistoryItemUiState> = arrayListOf(),
+    var onClickHistory: (fid: Long) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ViewHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(history: Pair<FaceInfo, List<SimilarFace>>) {
-            val faceInfo = history.first
-            val similarFaces = history.second
+        fun bind(history: HistoryItemUiState) {
+            val faceInfo = history.faceInfo
+            val similarFaces = history.similarFaceList
 
             with(binding) {
                 ageTxt.text = "${faceInfo.age}세"
@@ -50,10 +51,10 @@ class HistoryAdapter(
             }
 
             binding.favoriteBtn.setOnClickListener {
-                onClickFavorite(faceInfo.fid, !faceInfo.isFavorite)
+                history.onFavorite()
             }
 
-            val img = if (faceInfo.isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
+            val img = if (history.isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
             binding.favoriteBtn.setImageDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,

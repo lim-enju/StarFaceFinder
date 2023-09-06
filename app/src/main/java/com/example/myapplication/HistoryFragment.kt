@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.load.engine.Engine.LoadStatus
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,7 +65,7 @@ class HistoryFragment : Fragment() {
                     //히스토리가 없는 경우
                     historyList.isVisible = false
                     historyEmptyTxt.isVisible = true
-                } else {
+                }else{
                     historyList.isVisible = true
                     historyEmptyTxt.isVisible = false
                 }

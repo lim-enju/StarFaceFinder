@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.load.engine.Engine.LoadStatus
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,17 +56,6 @@ class HistoryFragment : Fragment() {
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
             historyList.itemAnimator = null
-
-            historyAdapter.addLoadStateListener { loadState ->
-                if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && historyAdapter.itemCount < 1) {
-                    //히스토리가 없는 경우
-                    historyList.isVisible = false
-                    historyEmptyTxt.isVisible = true
-                }else{
-                    historyList.isVisible = true
-                    historyEmptyTxt.isVisible = false
-                }
-            }
         }
     }
 

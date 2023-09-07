@@ -1,6 +1,5 @@
 package com.example.myapplication.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -9,22 +8,18 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ViewHistoryBinding
 import com.example.myapplication.databinding.ViewHistoryEmptyBinding
-import com.example.myapplication.model.HistoryItemUiState
-import com.example.myapplication.model.HistoryUiState
-import com.starFaceFinder.data.common.TAG
-import com.starFaceFinder.data.model.FaceInfo
-import com.starFaceFinder.data.model.SimilarFace
-import java.lang.Exception
+import com.starFaceFinder.data.model.FaceInfoHistory
 
 class HistoryAdapter(
-    var histories: ArrayList<HistoryItemUiState> = arrayListOf(),
-    var onClickHistory: (fid: Long) -> Unit
+    var histories: ArrayList<FaceInfoHistory> = arrayListOf(),
+    var onClickHistory: (fid: Long) -> Unit,
+    var onClickFavorite: (fid: Long, isFavorite: Boolean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class HistoryViewHolder(private val binding: ViewHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(history: HistoryItemUiState) {
+        fun bind(history: FaceInfoHistory) {
             val faceInfo = history.faceInfo
             val similarFaces = history.similarFaceList
 
@@ -51,10 +46,11 @@ class HistoryAdapter(
             }
 
             binding.favoriteBtn.setOnClickListener {
-                history.onFavorite()
+                onClickFavorite(faceInfo.fid, !history.isFavorite)
             }
 
-            val img = if (history.isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
+            val img =
+                if (history.isFavorite) R.drawable.fill_favorite else R.drawable.border_favorite
             binding.favoriteBtn.setImageDrawable(
                 ContextCompat.getDrawable(
                     binding.root.context,

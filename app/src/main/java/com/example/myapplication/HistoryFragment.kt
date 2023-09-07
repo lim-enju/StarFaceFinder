@@ -45,11 +45,16 @@ class HistoryFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            historyAdapter = HistoryAdapter() { fid ->
-                val action =
-                    HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
-                findNavController().navigate(action)
-            }
+            historyAdapter = HistoryAdapter(
+                onClickHistory = { fid ->
+                    val action =
+                        HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
+                    findNavController().navigate(action)
+                },
+                onClickFavorite = { fid, isFavorite ->
+                    viewModel.updateFavorite(fid, isFavorite)
+                }
+            )
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
             historyList.itemAnimator = null

@@ -32,6 +32,10 @@ class HistoryViewModel @Inject constructor(
     private val _updatedHistoryItem = MutableSharedFlow<Int>()
     val updatedHistoryItem: SharedFlow<Int> = _updatedHistoryItem.asSharedFlow()
 
+    private val _toastMsg = MutableSharedFlow<String>()
+    val toastMsg: SharedFlow<String> = _toastMsg.asSharedFlow()
+
+    //TODO:: 조회 로직 수정
     private var offset = 0
     private var limit = 10
 
@@ -52,6 +56,11 @@ class HistoryViewModel @Inject constructor(
                     )
                 }
                 _historyUiState.value.historyItems.addAll(historyList)
+
+                if(_historyUiState.value.historyItems.isEmpty()){
+                    _toastMsg.emit("홈>닮은 연예인 찾기 에서 닮은 연예인을 찾아보세요")
+                }
+
                 _historyUiState.value
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 //            .onEach { histories ->

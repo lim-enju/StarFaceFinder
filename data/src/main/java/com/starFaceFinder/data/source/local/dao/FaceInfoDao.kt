@@ -1,4 +1,4 @@
-package com.starFaceFinder.data.source.local
+package com.starFaceFinder.data.source.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

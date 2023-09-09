@@ -7,9 +7,9 @@ import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.util.getBody
 import java.io.File
 
-class SearchDataSource constructor(
+class SearchRemoteDataSource constructor(
     private val findFaceService: FindFaceService
-) : ISearchDataSource {
+) : ISearchRemoteDataSource {
     override suspend fun searchSimilarFace(
         name: String,
         filename: String,

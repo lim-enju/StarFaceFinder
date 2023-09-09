@@ -5,7 +5,7 @@ import com.starFaceFinder.data.model.response.SearchedSimilarFaceResponse
 import com.starFaceFinder.data.model.response.SearchedImageResponse
 import java.io.File
 
-interface ISearchDataSource {
+interface ISearchRemoteDataSource {
     suspend fun searchSimilarFace(
         name: String,
         filename: String,

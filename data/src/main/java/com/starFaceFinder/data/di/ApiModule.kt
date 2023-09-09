@@ -6,8 +6,12 @@ import com.starFaceFinder.data.common.ResultCallAdapterFactory
 import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.source.SearchRepository
 import com.starFaceFinder.data.source.UserPreferencesRepository
-import com.starFaceFinder.data.source.local.HistoryRepository
-import com.starFaceFinder.data.source.network.SearchDataSource
+import com.starFaceFinder.data.source.HistoryRepository
+import com.starFaceFinder.data.source.local.AppDatabase
+import com.starFaceFinder.data.source.local.HistoryLocalDataSource
+import com.starFaceFinder.data.source.local.IHistoryLocalDataSource
+import com.starFaceFinder.data.source.network.ISearchRemoteDataSource
+import com.starFaceFinder.data.source.network.SearchRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,14 +68,18 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideFindFaceDataSource(service: FindFaceService) = SearchDataSource(service)
+    fun provideSearchRemoteDataSource(service: FindFaceService) = SearchRemoteDataSource(service)
 
     @Singleton
     @Provides
-    fun provideHistoryRepositoryRepository(
-        datasource: SearchDataSource,
-        historyRepository: HistoryRepository
-    ) = SearchRepository(datasource, historyRepository)
+    fun proviceHistoryLocalDataSource(database: AppDatabase) = HistoryLocalDataSource(database)
+
+    @Singleton
+    @Provides
+    fun provideSearchRepositoryRepository(
+        searchRemoteDataSource: SearchRemoteDataSource,
+        historyLocalDataSource: HistoryLocalDataSource
+    ) = SearchRepository(searchRemoteDataSource, historyLocalDataSource)
 
     @Singleton
     @Provides

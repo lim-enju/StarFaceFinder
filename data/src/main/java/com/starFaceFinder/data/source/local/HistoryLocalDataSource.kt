@@ -2,22 +2,21 @@ package com.starFaceFinder.data.source.local
 
 import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.SimilarFace
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class HistoryRepository @Inject constructor(
+class HistoryLocalDataSource @Inject constructor(
     private val database: AppDatabase
-) {
-    fun getHistoryDetail(fid: Long) =
+) : IHistoryLocalDataSource {
+    override fun getHistoryDetail(fid: Long): Map<FaceInfo, List<SimilarFace>> =
         database.faceInfoDao().getFaceHistory(fid)
 
-    fun getAllHistory(limit: Int, offset: Int) =
+    override fun getAllHistory(limit: Int, offset: Int): Flow<Map<FaceInfo, List<SimilarFace>>> =
         database.faceInfoDao().getFaceHistories(limit, offset)
 
-    fun insertFaceInfoHistory(faceInfo: FaceInfo) =
+    override fun insertFaceInfoHistory(faceInfo: FaceInfo): Long =
         database.faceInfoDao().insertFaceInfo(faceInfo)
 
-
-    fun insertSimilarFaceHistory(similarFaces: List<SimilarFace>) {
+    override fun insertSimilarFaceHistory(similarFaces: List<SimilarFace>) =
         database.similarFacesDao().insertSimilarFaceDao(similarFaces)
-    }
 }

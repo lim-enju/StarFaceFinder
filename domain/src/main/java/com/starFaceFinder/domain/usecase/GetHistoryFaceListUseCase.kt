@@ -1,12 +1,9 @@
 package com.starFaceFinder.domain.usecase
 
 import com.starFaceFinder.data.model.FaceInfoHistory
-import com.starFaceFinder.data.source.local.HistoryRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.starFaceFinder.data.source.HistoryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetHistoryFaceListUseCase @Inject constructor(

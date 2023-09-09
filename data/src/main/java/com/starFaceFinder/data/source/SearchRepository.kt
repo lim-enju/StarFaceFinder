@@ -2,13 +2,13 @@ package com.starFaceFinder.data.source
 
 import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.SimilarFace
-import com.starFaceFinder.data.source.local.HistoryRepository
-import com.starFaceFinder.data.source.network.ISearchDataSource
+import com.starFaceFinder.data.source.local.IHistoryLocalDataSource
+import com.starFaceFinder.data.source.network.ISearchRemoteDataSource
 import java.io.File
 
 class SearchRepository constructor(
-    private val searchDataSource: ISearchDataSource,
-    private val historyRepository: HistoryRepository
+    private val searchDataSource: ISearchRemoteDataSource,
+    private val historyLocalDataSource: IHistoryLocalDataSource
 ) {
     suspend fun searchSimilarFace(
         fid: Long,
@@ -43,7 +43,7 @@ class SearchRepository constructor(
                 }
             }.onSuccess { similarFaces ->
                 //연예인 사진 검색 결과 저장
-                historyRepository.insertSimilarFaceHistory(similarFaces)
+                historyLocalDataSource.insertSimilarFaceHistory(similarFaces)
             }
 
     private suspend fun searchImage(
@@ -62,7 +62,7 @@ class SearchRepository constructor(
             }.onSuccess { faceInfo ->
                 //얼굴 인식에 성공할 경우 insert history
                 faceInfo?.let {
-                    faceInfo.fid = historyRepository.insertFaceInfoHistory(faceInfo)
+                    faceInfo.fid = historyLocalDataSource.insertFaceInfoHistory(faceInfo)
                 }
             }
 }

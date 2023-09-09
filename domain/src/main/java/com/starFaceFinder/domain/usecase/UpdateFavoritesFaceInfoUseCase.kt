@@ -3,7 +3,7 @@ package com.starFaceFinder.domain.usecase
 import com.starFaceFinder.data.model.FaceInfo
 import com.starFaceFinder.data.model.SimilarFace
 import com.starFaceFinder.data.source.UserPreferencesRepository
-import com.starFaceFinder.data.source.local.HistoryRepository
+import com.starFaceFinder.data.source.HistoryRepository
 import javax.inject.Inject
 
 class UpdateFavoritesFaceInfoUseCase @Inject constructor(

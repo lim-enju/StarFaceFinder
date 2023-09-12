@@ -87,7 +87,6 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    //왜 null 이지..
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

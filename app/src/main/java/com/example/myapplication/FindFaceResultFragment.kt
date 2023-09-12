@@ -188,7 +188,8 @@ class FindFaceResultFragment : Fragment() {
         }
     }
 
-    //왜 null 이지..
+    //더이상 화면에서 사용되지 않으므로 null로 set함
+    //가비지 컬렉션에 의해 메모리가 해제되도록 함
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -14,9 +14,9 @@ interface FaceInfoDao {
         "SELECT * FROM FaceInfo" +
                 " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
                 " ORDER BY fid DESC" +
-                " LIMIT :limit OFFSET :offset"
+                " LIMIT :limit OFFSET :offset * :limit"
     )
-    fun getFaceHistories(limit: Int, offset: Int): Flow<Map<FaceInfo, List<SimilarFace>>>
+    fun getFaceHistories(limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
 
     //히스토리 한건 조회
     @Query(

@@ -4,17 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.HistoryUiState
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
-import com.starFaceFinder.domain.usecase.GetUserPreferencesUseCase
 import com.starFaceFinder.domain.usecase.UpdateFavoritesFaceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +23,7 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _historyUiState = MutableStateFlow(HistoryUiState())
+    val historyUiState = _historyUiState.asStateFlow()
 
     private val _updatedHistoryItem = MutableSharedFlow<Int>()
     val updatedHistoryItem: SharedFlow<Int> = _updatedHistoryItem.asSharedFlow()
@@ -36,21 +35,30 @@ class HistoryViewModel @Inject constructor(
     private var offset = 0
     private var limit = 10
 
-    suspend fun historyUiState() =
-        getHistoryFaceListUseCase
-            .invoke(limit, offset)
-            .map { historyList ->
-                _historyUiState.value.historyItems.addAll(historyList)
+    init {
+        loadHistory()
+    }
 
-                if (_historyUiState.value.historyItems.isEmpty()) {
-                    _toastMsg.emit("홈>닮은 연예인 찾기 에서 닮은 연예인을 찾아보세요")
-                }
+    fun loadHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val histories = _historyUiState.value.historyItems
+            val loadedHistories = getHistoryFaceListUseCase.invoke(limit, offset)
 
-                _historyUiState.value
-            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
-//            .onEach { histories ->
-//                if (histories.isNotEmpty()) offset += histories.size
-//            }
+            _historyUiState.update {
+                it.copy(
+                    historyItems = ArrayList(histories + loadedHistories)
+                )
+            }
+
+            //다음 페이지 조회를 위해 offset + 1
+            if(loadedHistories.isNotEmpty()) offset++
+
+            //히스토리가 없는 경우
+            if (_historyUiState.value.historyItems.isEmpty()) {
+                _toastMsg.emit("홈>닮은 연예인 찾기 에서 닮은 연예인을 찾아보세요")
+            }
+        }
+    }
 
     fun updateFavorite(fid: Long, isFavorite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

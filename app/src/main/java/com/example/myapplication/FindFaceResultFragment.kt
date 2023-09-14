@@ -152,30 +152,6 @@ class FindFaceResultFragment : Fragment() {
         }
     }
 
-    private fun drawRectangle(imageView: ImageView, x: Float, y: Float) {
-        val bitmap = (imageView.drawable as? BitmapDrawable)?.bitmap ?: return
-
-        val scaledX = x / imageView.width * bitmap.width
-        val scaledY = y / imageView.height * bitmap.height
-
-        val paint = Paint().apply {
-            color = Color.RED
-            style = Paint.Style.STROKE
-            strokeWidth = 5f
-        }
-
-        val canvas = Canvas(bitmap.copy(Bitmap.Config.ARGB_8888, true))
-        canvas.drawRect(
-            scaledX - 50, // 왼쪽 위 X 좌표
-            scaledY - 50, // 왼쪽 위 Y 좌표
-            scaledX + 50, // 오른쪽 아래 X 좌표
-            scaledY + 50, // 오른쪽 아래 Y 좌표
-            paint
-        )
-
-        imageView.setImageBitmap(bitmap)
-    }
-
     private fun showFaceInfoLayoutTravelData(isLoading: Boolean) {
         if (isLoading) {
             binding.shimmerFaceInfoLayout.startShimmer()

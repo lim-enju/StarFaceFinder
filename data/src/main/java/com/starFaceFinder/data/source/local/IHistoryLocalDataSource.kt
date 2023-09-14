@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface IHistoryLocalDataSource {
     fun getHistoryDetail(fid: Long): Map<FaceInfo, List<SimilarFace>>
 
-    fun getAllHistory(limit: Int, offset: Int): Flow<Map<FaceInfo, List<SimilarFace>>>
+    fun getFaceHistories(limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
 
     fun insertFaceInfoHistory(faceInfo: FaceInfo): Long
 

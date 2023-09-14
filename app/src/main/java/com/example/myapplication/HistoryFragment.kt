@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,14 +59,23 @@ class HistoryFragment : Fragment() {
             historyList.adapter = historyAdapter
             historyList.layoutManager = LinearLayoutManager(requireContext())
             historyList.itemAnimator = null
+
+            historyList.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+                        viewModel.loadHistory()
+                    }
+                }
+            })
         }
     }
 
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    viewModel.historyUiState().filterNotNull().collect { uiState ->
+                    viewModel.historyUiState.filterNotNull().collect { uiState ->
                         historyAdapter.histories = uiState.historyItems
                         historyAdapter.notifyItemRangeChanged(
                             0,

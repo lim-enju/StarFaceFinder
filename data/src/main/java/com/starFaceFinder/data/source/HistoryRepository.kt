@@ -8,5 +8,5 @@ class HistoryRepository @Inject constructor(
 ) {
     fun getHistoryDetail(fid: Long) = historyLocalDataSource.getHistoryDetail(fid)
 
-    fun getAllHistory(limit: Int, offset: Int) = historyLocalDataSource.getAllHistory(limit, offset)
+    fun getFaceHistories(limit: Int, offset: Int) = historyLocalDataSource.getFaceHistories(limit, offset)
 }

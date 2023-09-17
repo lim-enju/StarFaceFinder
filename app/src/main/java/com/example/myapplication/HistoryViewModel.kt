@@ -31,6 +31,8 @@ class HistoryViewModel @Inject constructor(
     private val _toastMsg = MutableSharedFlow<String>()
     val toastMsg: SharedFlow<String> = _toastMsg.asSharedFlow()
 
+    val searchedText = MutableStateFlow<String?>(null)
+
     //TODO:: 조회 로직 수정
     private var offset = 0
     private var limit = 10

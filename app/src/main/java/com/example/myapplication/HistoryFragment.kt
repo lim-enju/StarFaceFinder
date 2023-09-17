@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.HistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
+import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
@@ -46,6 +48,7 @@ class HistoryFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
+            vm = viewModel
             historyAdapter = HistoryAdapter(
                 onClickHistory = { fid ->
                     val action =
@@ -91,6 +94,11 @@ class HistoryFragment : Fragment() {
                 launch {
                     viewModel.toastMsg.collectLatest { msg ->
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                launch {
+                    viewModel.searchedText.collectLatest { searched ->
+                        Log.d(TAG, "initObserver: $searched")
                     }
                 }
             }

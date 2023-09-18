@@ -2,8 +2,13 @@ package com.example.myapplication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.example.myapplication.model.HistoryUiState
+import com.starFaceFinder.domain.pagingSource.SearchedHistoriesPagingSource
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
+import com.starFaceFinder.domain.usecase.GetSearchedHistoryFaceListUseCase
 import com.starFaceFinder.domain.usecase.UpdateFavoritesFaceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +27,7 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val getHistoryFaceListUseCase: GetHistoryFaceListUseCase,
     private val updateFavoritesFaceInfoUseCase: UpdateFavoritesFaceInfoUseCase,
+    private val getSearchedHistoryFaceListUseCase: GetSearchedHistoryFaceListUseCase
 ) : ViewModel() {
 
     private val _historyUiState = MutableStateFlow(HistoryUiState())
@@ -33,9 +41,22 @@ class HistoryViewModel @Inject constructor(
 
     val searchedText = MutableStateFlow<String?>(null)
 
-    //TODO:: 조회 로직 수정
     private var offset = 0
     private var limit = 10
+
+
+    private fun searchHistories(searchedText: String) =
+        Pager(
+            PagingConfig(pageSize = limit)
+        ) {
+            SearchedHistoriesPagingSource(getSearchedHistoryFaceListUseCase, searchedText)
+        }.flow
+            .cachedIn(viewModelScope)
+
+    val searchedHistoriesFlow = searchedText
+        .flatMapLatest {  searchedText ->
+            searchHistories(searchedText?:"")
+        }.cachedIn(viewModelScope)
 
     init {
         loadHistory()
@@ -53,7 +74,7 @@ class HistoryViewModel @Inject constructor(
             }
 
             //다음 페이지 조회를 위해 offset + 1
-            if(loadedHistories.isNotEmpty()) offset++
+            if (loadedHistories.isNotEmpty()) offset++
 
             //히스토리가 없는 경우
             if (_historyUiState.value.historyItems.isEmpty()) {

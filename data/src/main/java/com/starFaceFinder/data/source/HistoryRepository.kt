@@ -9,4 +9,6 @@ class HistoryRepository @Inject constructor(
     fun getHistoryDetail(fid: Long) = historyLocalDataSource.getHistoryDetail(fid)
 
     fun getFaceHistories(limit: Int, offset: Int) = historyLocalDataSource.getFaceHistories(limit, offset)
+
+    fun getSearchedHistories(text: String, limit: Int, offset: Int) = historyLocalDataSource.getSearchedFaceHistories(text, limit, offset)
 }

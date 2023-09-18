@@ -26,6 +26,15 @@ interface FaceInfoDao {
     )
     fun getFaceHistory(fid: Long): Map<FaceInfo, List<SimilarFace>>
 
+    //히스토리 한건 조회
+    @Query(
+        "SELECT * FROM FaceInfo" +
+                " INNER JOIN SimilarFace ON SimilarFace.fid = FaceInfo.fid" +
+                " WHERE name like '%' || :text || '%'" +
+                " LIMIT :limit OFFSET :offset * :limit"
+    )
+    fun getSearchedFaceHistory(text: String, limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
+
     @Insert
     fun insertFaceInfo(faceInfo: FaceInfo): Long
 }

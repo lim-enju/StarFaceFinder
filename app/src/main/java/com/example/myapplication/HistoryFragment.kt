@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.HistoryAdapter
+import com.example.myapplication.adapter.SearchedHistoryAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.starFaceFinder.data.common.TAG
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,7 @@ class HistoryFragment : Fragment() {
 
     private val viewModel: HistoryViewModel by viewModels()
     private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var searchedHistoryAdapter: SearchedHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,6 +74,17 @@ class HistoryFragment : Fragment() {
                     }
                 }
             })
+
+            searchedHistoryAdapter = SearchedHistoryAdapter(
+                onClickHistory = { fid ->
+                    val action =
+                        HistoryFragmentDirections.actionHistoryFragmentToHistoryDetailFragment(fid)
+                    findNavController().navigate(action)
+                }
+            )
+            searchedHistoryList.adapter = searchedHistoryAdapter
+            searchedHistoryList.layoutManager = LinearLayoutManager(requireContext())
+            searchedHistoryList.itemAnimator = null
         }
     }
 
@@ -97,8 +111,14 @@ class HistoryFragment : Fragment() {
                     }
                 }
                 launch {
-                    viewModel.searchedText.collectLatest { searched ->
-                        Log.d(TAG, "initObserver: $searched")
+                    viewModel.searchedHistoriesFlow.collectLatest {
+                        searchedHistoryAdapter.submitData(it)
+                    }
+                }
+                launch {
+                    viewModel.searchedText.collectLatest { query ->
+                        binding.historyList.isVisible = query.isNullOrBlank()
+                        binding.searchedHistoryList.isVisible = !query.isNullOrBlank()
                     }
                 }
             }

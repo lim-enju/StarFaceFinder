@@ -9,6 +9,8 @@ interface IHistoryLocalDataSource {
 
     fun getFaceHistories(limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
 
+    fun getSearchedFaceHistories(text: String, limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>>
+
     fun insertFaceInfoHistory(faceInfo: FaceInfo): Long
 
     fun insertSimilarFaceHistory(similarFaces: List<SimilarFace>)

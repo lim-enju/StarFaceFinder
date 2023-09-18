@@ -14,6 +14,9 @@ class HistoryLocalDataSource @Inject constructor(
     override fun getFaceHistories(limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>> =
         database.faceInfoDao().getFaceHistories(limit, offset)
 
+    override fun getSearchedFaceHistories(text: String, limit: Int, offset: Int): Map<FaceInfo, List<SimilarFace>> =
+        database.faceInfoDao().getSearchedFaceHistory(text, limit, offset)
+
     override fun insertFaceInfoHistory(faceInfo: FaceInfo): Long =
         database.faceInfoDao().insertFaceInfo(faceInfo)
 

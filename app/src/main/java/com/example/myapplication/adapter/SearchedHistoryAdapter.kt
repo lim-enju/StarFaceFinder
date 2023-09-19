@@ -14,7 +14,6 @@ import com.example.myapplication.utils.PagingComparator
 import com.starFaceFinder.data.model.FaceInfoHistory
 
 class SearchedHistoryAdapter(
-    var histories: ArrayList<FaceInfoHistory> = arrayListOf(),
     var onClickHistory: (fid: Long) -> Unit,
 ) :  PagingDataAdapter<FaceInfoHistory, RecyclerView.ViewHolder>(PagingComparator.SearchedHistoriesComparator) {
 
@@ -53,25 +52,20 @@ class SearchedHistoryAdapter(
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        when {
-            histories.isNotEmpty() -> {
-                HistoryViewHolder(
-                    ViewSearchedHistoryBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
-                )
-            }
+        HistoryViewHolder(
+            ViewSearchedHistoryBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
-            else -> EmptyViewHolder(ViewHistoryEmptyBinding.inflate(LayoutInflater.from(parent.context)))
-        }
-
-    override fun getItemCount(): Int = histories.size
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is HistoryViewHolder -> {
-                holder.bind(histories[position])
+                getItem(position)?.let { history ->
+                    holder.bind(history)
+                }
             }
         }
     }

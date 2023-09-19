@@ -1,11 +1,13 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.example.myapplication.model.HistoryUiState
+import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.domain.pagingSource.SearchedHistoriesPagingSource
 import com.starFaceFinder.domain.usecase.GetHistoryFaceListUseCase
 import com.starFaceFinder.domain.usecase.GetSearchedHistoryFaceListUseCase
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -51,7 +54,7 @@ class HistoryViewModel @Inject constructor(
         ) {
             SearchedHistoriesPagingSource(getSearchedHistoryFaceListUseCase, searchedText)
         }.flow
-            .cachedIn(viewModelScope)
+            .flowOn(Dispatchers.IO)
 
     val searchedHistoriesFlow = searchedText
         .flatMapLatest {  searchedText ->

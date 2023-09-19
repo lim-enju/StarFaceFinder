@@ -1,10 +1,14 @@
 package com.starFaceFinder.domain.pagingSource
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.starFaceFinder.data.common.TAG
 import com.starFaceFinder.data.model.FaceInfoHistory
 import com.starFaceFinder.data.source.HistoryRepository
 import com.starFaceFinder.domain.usecase.GetSearchedHistoryFaceListUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SearchedHistoriesPagingSource @Inject constructor(
@@ -16,14 +20,16 @@ class SearchedHistoriesPagingSource @Inject constructor(
     ): LoadResult<Int, FaceInfoHistory> {
         return try {
             // Start refresh at page 1 if undefined.
-            val nextPageNumber = params.key ?: 1
-            val response = getSearchedHistoryFaceListUseCase.invoke(query, params.loadSize, nextPageNumber)
-
-            LoadResult.Page(
-                data = response,
-                prevKey = null, // Only paging forward.
-                nextKey = if(response.isEmpty()) null else nextPageNumber + 1
-            )
+            withContext(Dispatchers.IO){
+                val nextPageNumber = params.key ?: 0
+                val response = getSearchedHistoryFaceListUseCase.invoke(query, params.loadSize, nextPageNumber)
+                Log.d(TAG, "load: $query ${response.size} $nextPageNumber")
+                LoadResult.Page(
+                    data = response,
+                    prevKey = null, // Only paging forward.
+                    nextKey = if(response.isEmpty()) null else nextPageNumber + 1
+                )
+            }
         } catch (e: Exception) {
             // Handle errors in this block and return LoadResult.Error for
             // expected errors (such as a network failure).

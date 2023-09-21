@@ -62,8 +62,8 @@ class HistoryDetailFragment : Fragment() {
                     viewModel.historyDetail.catch {
                         Toast.makeText(requireContext(), "히스토리 조회 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                     }.collect { history ->
-                        val faceInfo = history.keys.first()
-                        val celebrity = history[faceInfo]?: listOf()
+                        val faceInfo = history.faceInfo
+                        val celebrity = history.similarFaceList
 
                         //유명인 리스트 표시
                         celebritiesAdapter.celebrities = celebrity

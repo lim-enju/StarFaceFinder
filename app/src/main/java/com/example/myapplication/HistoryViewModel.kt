@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -47,7 +48,6 @@ class HistoryViewModel @Inject constructor(
     private var offset = 0
     private var limit = 10
 
-
     private fun searchHistories(searchedText: String) =
         Pager(
             PagingConfig(pageSize = limit)
@@ -57,6 +57,7 @@ class HistoryViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
 
     val searchedHistoriesFlow = searchedText
+        .debounce(300)
         .flatMapLatest {  searchedText ->
             searchHistories(searchedText?:"")
         }.cachedIn(viewModelScope)

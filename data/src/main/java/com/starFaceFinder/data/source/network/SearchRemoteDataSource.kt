@@ -6,8 +6,9 @@ import com.starFaceFinder.data.model.response.SearchedImageResponse
 import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.util.getBody
 import java.io.File
+import javax.inject.Inject
 
-class SearchRemoteDataSource constructor(
+class SearchRemoteDataSource @Inject constructor(
     private val findFaceService: FindFaceService
 ) : ISearchRemoteDataSource {
     override suspend fun searchSimilarFace(

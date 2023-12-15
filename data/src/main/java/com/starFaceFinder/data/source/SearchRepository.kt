@@ -5,8 +5,9 @@ import com.starFaceFinder.data.model.SimilarFace
 import com.starFaceFinder.data.source.local.IHistoryLocalDataSource
 import com.starFaceFinder.data.source.network.ISearchRemoteDataSource
 import java.io.File
+import javax.inject.Inject
 
-class SearchRepository constructor(
+class SearchRepository @Inject constructor(
     private val searchDataSource: ISearchRemoteDataSource,
     private val historyLocalDataSource: IHistoryLocalDataSource
 ) {

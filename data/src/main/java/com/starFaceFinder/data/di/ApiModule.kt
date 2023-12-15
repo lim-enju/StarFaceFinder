@@ -68,15 +68,7 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideSearchRemoteDataSource(service: FindFaceService) = SearchRemoteDataSource(service)
-
-    @Singleton
-    @Provides
-    fun proviceHistoryLocalDataSource(database: AppDatabase) = HistoryLocalDataSource(database)
-
-    @Singleton
-    @Provides
-    fun provideSearchRepositoryRepository(
+    fun provideSearchRepository(
         searchRemoteDataSource: SearchRemoteDataSource,
         historyLocalDataSource: HistoryLocalDataSource
     ) = SearchRepository(searchRemoteDataSource, historyLocalDataSource)

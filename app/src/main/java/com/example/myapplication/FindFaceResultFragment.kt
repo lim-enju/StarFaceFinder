@@ -1,15 +1,9 @@
 package com.example.myapplication
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,12 +16,9 @@ import com.bumptech.glide.Glide
 import com.example.myapplication.adapter.CelebritiesAdapter
 import com.example.myapplication.databinding.FragmentFindFaceResultBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -66,25 +57,16 @@ class FindFaceResultFragment : Fragment() {
     private fun initObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
+//                launch {
+//                    viewModel.imageFile
+//                        .catch {
+//                            Toast.makeText(requireContext(), "파일을 찾지 못했습니다.", Toast.LENGTH_SHORT).show()
+//                        }
+//                        .collect()
+//                }
                 launch {
-                    viewModel.imageFile
-                        .catch {
-                            Toast.makeText(requireContext(), "파일을 찾지 못했습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        .collect()
-                }
-                launch {
-                    viewModel.searchedSimilarFace
-                        .filterNotNull()
-                        .catch {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.network_error,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        .collect { result ->
-                            val faces = result.getOrNull() ?: arrayListOf()
+                    viewModel.similarFaceInfos
+                        .collect { faces ->
                             celebritiesAdapter.isSearchingComplete = true
                             celebritiesAdapter.celebrities = faces
                             celebritiesAdapter.notifyItemRangeChanged(
@@ -93,31 +75,36 @@ class FindFaceResultFragment : Fragment() {
                             )
                         }
                 }
+
                 launch {
-                    viewModel.searchedFaceInfo
-                        .catch {
-                            Toast.makeText(
-                                requireContext(),
-                                it.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        .combine(viewModel.imageFile) { faceInfoResult, imageFile ->
+                    viewModel.toastMsg.collect { msg ->
+                        Toast.makeText(
+                            requireContext(),
+                            msg,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                launch {
+                    viewModel.searchFaceInfo
+                        .filterNotNull()
+                        .zip(
+                            viewModel.faceImgFile.filterNotNull()
+                        ) { faceInfo, faceImgFile ->
                             with(binding.layoutFaceInfo) {
                                 showFaceInfoLayoutTravelData(false)
 
-                                val face = faceInfoResult.getOrNull()?: return@combine
-
                                 Glide
                                     .with(requireContext())
-                                    .load(imageFile)
+                                    .load(faceImgFile)
                                     .override(300)
                                     .into(selectedImg)
 
                                 //성별 표시
-                                var confidence = face.genderConfidence ?: 0
+                                var confidence = faceInfo.genderConfidence ?: 0
                                 var genderText: String? = null
-                                when (face.gender) {
+                                when (faceInfo.gender) {
                                     "male" -> {
                                         genderText = "남성"
                                         childGenderView.isVisible = false
@@ -143,8 +130,8 @@ class FindFaceResultFragment : Fragment() {
                                 }
 
                                 //나이 표시
-                                confidence = face.ageConfidence ?: 0
-                                ageTxt.text = "${face.age}세 $genderText ${confidence}%"
+                                confidence = faceInfo.ageConfidence ?: 0
+                                ageTxt.text = "${faceInfo.age}세 $genderText ${confidence}%"
                             }
                         }.collect()
                 }

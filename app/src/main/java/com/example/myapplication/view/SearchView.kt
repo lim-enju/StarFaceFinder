@@ -12,7 +12,7 @@ import androidx.databinding.InverseBindingListener
 import com.example.myapplication.databinding.ViewSearchBinding
 
 class SearchView: ConstraintLayout {
-    val binding: ViewSearchBinding = ViewSearchBinding.inflate(LayoutInflater.from(context), this, false)
+    private val binding: ViewSearchBinding = ViewSearchBinding.inflate(LayoutInflater.from(context), this, false)
     constructor(context: Context) : super(context){
         initView()
     }

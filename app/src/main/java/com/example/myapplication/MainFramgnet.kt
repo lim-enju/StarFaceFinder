@@ -23,17 +23,19 @@ import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.databinding.FragmentMainBinding
 import com.example.myapplication.delegate.IPermissionDelegation
 import com.example.myapplication.delegate.PermissionDelegation
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainFramgnet : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     //권한을 관리하는 delegation
-    private val permissionDelegation: IPermissionDelegation by lazy {
-        PermissionDelegation(requireActivity().activityResultRegistry)
-    }
+    @Inject
+    lateinit var permissionDelegation: IPermissionDelegation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -5,7 +5,6 @@ import com.example.myapplication.delegate.PermissionDelegation
 import org.junit.Before
 import org.junit.Test
 
-
 class PermissionUnitTest {
 
     //권한을 관리하는 delegation

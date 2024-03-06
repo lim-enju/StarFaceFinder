@@ -12,12 +12,13 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 
 /**
  * @see DefaultLifecycleObserver onCreate에서 launcher를 초기화 해주기 위해
  * DefaultLifecycleObserver 를 상속받음
  */
-class PermissionDelegation(
+class PermissionDelegation @Inject constructor(
     private val registry: ActivityResultRegistry
 ) : IPermissionDelegation, DefaultLifecycleObserver {
 

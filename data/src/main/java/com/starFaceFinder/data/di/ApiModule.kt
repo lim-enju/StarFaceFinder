@@ -7,6 +7,8 @@ import com.starFaceFinder.data.service.FindFaceService
 import com.starFaceFinder.data.source.SearchRepository
 import com.starFaceFinder.data.source.UserPreferencesRepository
 import com.starFaceFinder.data.source.HistoryRepository
+import com.starFaceFinder.data.source.IHistoryRepository
+import com.starFaceFinder.data.source.IUserPreferencesRepository
 import com.starFaceFinder.data.source.local.AppDatabase
 import com.starFaceFinder.data.source.local.HistoryLocalDataSource
 import com.starFaceFinder.data.source.local.IHistoryLocalDataSource
@@ -77,5 +79,12 @@ object ApiModule {
     @Provides
     fun provideUserPreferencesRepository(
         @ApplicationContext context: Context
-    ) = UserPreferencesRepository(context)
+    ): IUserPreferencesRepository = UserPreferencesRepository(context)
+
+    @Singleton
+    @Provides
+    fun provideHistoryRepository(
+        historyLocalDataSource: HistoryLocalDataSource
+    ): IHistoryRepository = HistoryRepository(historyLocalDataSource)
+
 }

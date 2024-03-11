@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 class UserPreferencesRepository @Inject constructor(
    private val context: Context
-) {
-    val userPreferencesFlow: Flow<UserData> = context.dataStore.data
+): IUserPreferencesRepository {
+    override val userPreferencesFlow: Flow<UserData> = context.dataStore.data
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
@@ -30,7 +30,7 @@ class UserPreferencesRepository @Inject constructor(
             )
         }
 
-    suspend fun updateFavoriteFaceInfo(fid: Long, isFavorite: Boolean) {
+    override suspend fun updateFavoriteFaceInfo(fid: Long, isFavorite: Boolean) {
         context.dataStore.updateData { preferences ->
             Log.d(TAG, "repo: $fid $isFavorite")
             if (isFavorite) {

@@ -2,11 +2,12 @@ package com.starFaceFinder.domain.usecase
 
 import com.starFaceFinder.data.model.FaceInfoHistory
 import com.starFaceFinder.data.source.HistoryRepository
+import com.starFaceFinder.data.source.IHistoryRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class GetHistoryFaceListUseCase @Inject constructor(
-    private val historyRepository: HistoryRepository,
+    private val historyRepository: IHistoryRepository,
     private val userPreferencesUseCase: GetUserPreferencesUseCase
 ) {
     suspend fun invoke(

@@ -28,3 +28,9 @@
 -dontwarn org.conscrypt.*
 -dontwarn org.openjsse.**
 -keep public class kotlin.**
+-keep public class kotlinx.**
+-keep public class kotlinx.coroutines.**
+
+-keepclassmembers class kotlinx.coroutines.** {
+    *;
+}
